@@ -32,9 +32,9 @@ namespace UnifiedWsGateway.Services
             Uri serverUri = new Uri(uri);
             int retryDelay = 1000;
 
-            while (true) // 自動重連機制
+            while (true)
             {
-                using (ClientWebSocket clientWebSocket = new ClientWebSocket()) // 修改部分：每次迴圈內都重新創建 WebSocket 實例
+                using (ClientWebSocket clientWebSocket = new ClientWebSocket())
                 {
                     try
                     {
