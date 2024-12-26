@@ -2,7 +2,7 @@
 
 namespace BlockChainStrategy.Library.Helpers
 {
-    internal static class LoggerHelper
+    public static class LoggerHelper
     {
         internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
