@@ -15,6 +15,22 @@
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<GridTradeRobot>> GetAllRobotsAsync()
+        { 
+            var robots = await _context.GridTradeRobots.ToListAsync();
+            return robots;
+        }
+
+        public async Task DeleteRobotAsync(int robotId)
+        {
+            var robot = await _context.GridTradeRobots.FindAsync(robotId);
+            if (robot != null)
+            {
+                _context.GridTradeRobots.Remove(robot);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task UpdateAPIKeyAsync(string encryptedApiKey, string encryptedApiSecret)
         {
             await _context.GridTradeRobots

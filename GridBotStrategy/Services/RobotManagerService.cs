@@ -17,7 +17,6 @@
                 switch (operation)
                 {
                     case RobotOperation.CreateRobotInfo:
-                        Console.WriteLine("執行創建機器人資訊...");
                         await CreateRobotAsync();
                         break;
 
@@ -27,7 +26,7 @@
                         break;
 
                     case RobotOperation.DeleteRobotInfo:
-                        Console.WriteLine("執行刪除機器人資訊...");
+                        await DeleteRobotAsync();
 
                         break;
 
@@ -68,6 +67,8 @@
         #region Create Robot
         private async Task CreateRobotAsync()
         {
+            LoggerHelper.LogInfo("執行創建機器人資訊...");
+
             var symbol = RobotManagerHelper.GetValidatedInput("請輸入交易貨幣(ex:BTCUSDT):");
 
             var positionSide = GetValidatedPositionSide();
@@ -94,6 +95,7 @@
             };
 
             await _gridRobotRepository.CreateRobotAsync(robot);
+            LoggerHelper.LogInfo("機器人創建成功！");
         }
 
         private static string GetValidatedPositionSide()
@@ -144,11 +146,55 @@
 
         #endregion
 
+        #region Delete Robot
+
+        private async Task DeleteRobotAsync()
+        {
+            LoggerHelper.LogInfo("執行刪除機器人資訊...");
+            var robots = await _gridRobotRepository.GetAllRobotsAsync();
+            if (robots.Count == 0)
+            {
+                Console.WriteLine("沒有機器人資訊！");
+                return;
+            }
+
+            Console.WriteLine("請選擇要刪除的機器人：");
+            foreach (var robot in robots)
+            {
+                Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
+                Console.WriteLine($"交易貨幣：{robot.Symbol} , 槓桿倍數 : {robot.Leverage} , 網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} ");
+            }
+
+            int deleteRobotId = CkeckInptDeleteRobotId(robots);
+
+            await _gridRobotRepository.DeleteRobotAsync(deleteRobotId);
+            LoggerHelper.LogInfo($"機器人 RobotID : {deleteRobotId} 刪除成功！");
+        }
+
+        private int CkeckInptDeleteRobotId(List<GridTradeRobot> robots)
+        {
+            while (true)
+            {
+                int deleteRobotId = RobotManagerHelper.GetValidatedIntInput("請輸入要刪除的機器人編號：");
+                if (robots.Any(r => r.GridTradeRobotId == deleteRobotId))
+                {
+                    return deleteRobotId;
+                }
+                Console.WriteLine("輸入無效，請重新輸入！");
+            }
+        }
+
+        #endregion
+
+        #region Update Robot API Key
+
         private async Task UpdateRobotApiKeyInfoAsync()
         {
             Console.WriteLine("執行更新所有機器人 API Key...");
             var (encryptedApiKey, encryptedApiSecret) = RobotManagerHelper.EncryptApiKeys();
             await _gridRobotRepository.UpdateAPIKeyAsync(encryptedApiKey, encryptedApiSecret);
         }
+
+        #endregion
     }
 }

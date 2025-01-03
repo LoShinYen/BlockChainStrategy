@@ -39,6 +39,8 @@ class Program
 
         var robotManagerService = host.Services.GetRequiredService<IRobotManagerService>();
         await robotManagerService.ExcuteAsync();
-
+        
+        // 開發中使用
+        Console.ReadLine();
     }
 }
