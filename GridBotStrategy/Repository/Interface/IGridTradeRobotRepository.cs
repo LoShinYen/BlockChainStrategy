@@ -2,6 +2,8 @@
 {
     internal interface IGridTradeRobotRepository
     {
-        Task  UpdateAsync(string encryptedApiKey, string encryptedApiSecret);
+        Task CreateRobotAsync(GridTradeRobot robot);
+
+        Task  UpdateAPIKeyAsync(string encryptedApiKey, string encryptedApiSecret);
     }
 }

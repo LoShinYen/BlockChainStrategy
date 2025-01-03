@@ -5,3 +5,5 @@ global using GridBotStrategy.Enums;
 global using GridBotStrategy.Repository.Interface;
 global using BlockChainStrategy.Library.Models.Context;
 global using GridBotStrategy.Repository;
+global using Microsoft.EntityFrameworkCore;
+global using BlockChainStrategy.Library.Enums;

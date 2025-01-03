@@ -9,9 +9,18 @@
             _context = context;
         }
 
-        public Task UpdateAsync(string encryptedApiKey, string encryptedApiSecret)
+        public async Task CreateRobotAsync(GridTradeRobot robot)
         {
-            throw new NotImplementedException();
+            await _context.GridTradeRobots.AddAsync(robot);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAPIKeyAsync(string encryptedApiKey, string encryptedApiSecret)
+        {
+            await _context.GridTradeRobots
+                .ExecuteUpdateAsync(robot => robot
+                    .SetProperty(r => r.EncryptedApiKey, encryptedApiKey)
+                    .SetProperty(r => r.EncryptedApiSecret, encryptedApiSecret));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GridBotStrategy.Enums
+﻿namespace GridBotStrategy.Enums.GridRobot
 {
     internal enum RobotOperation
     {
