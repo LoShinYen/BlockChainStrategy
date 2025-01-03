@@ -67,7 +67,7 @@
                     break;
             }
 
-            return false; // 返回 false，繼續循環
+            return false;
         }
 
         #region Create Robot
@@ -207,8 +207,14 @@
             Console.WriteLine("所有機器人資訊：");
             foreach (var robot in robots)
             {
+                var apiKey = EncryptionHelper.Decrypt(robot.EncryptedApiKey);
+                var apiSecret = EncryptionHelper.Decrypt(robot.EncryptedApiSecret);
                 Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
-                Console.WriteLine($"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Leverage} , 網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} , 網格數量 : {robot.GridCount} ");
+                Console.WriteLine(
+                    $"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Leverage} , " +
+                    $"網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} , 網格數量 : {robot.GridCount} ,"+
+                    $"API Key : {apiKey} , API Secret : {apiSecret}"
+                );
             }
             LoggerHelper.LogInfo("查看完畢");
         }
