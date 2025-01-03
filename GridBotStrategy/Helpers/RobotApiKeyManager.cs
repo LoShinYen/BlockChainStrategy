@@ -25,7 +25,7 @@
             }
             else
             {
-                Console.WriteLine("操作已取消。");
+                Console.WriteLine("本次操作不更新API Key 等資訊。");
             }
         }
 
