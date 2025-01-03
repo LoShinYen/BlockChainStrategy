@@ -11,57 +11,63 @@
 
         public async Task ExcuteAsync()
         {
-            var operation = RobotManagerHelper.AskForUserOperateRobotInfo();
-            try
+            while (true)
             {
-                switch (operation)
+                var operation = RobotManagerHelper.AskForUserOperateRobotInfo();
+                try
                 {
-                    case RobotOperation.CreateRobotInfo:
-                        await CreateRobotAsync();
+                    var isExit = await HandleOperationAsync(operation);
+                    if (isExit)
+                    {
+                        LoggerHelper.LogInfo("開始執行交易策略！");
                         break;
-
-                    case RobotOperation.UpdateRobotParameters:
-                        Console.WriteLine("執行更新機器人參數資訊...");
-
-                        break;
-
-                    case RobotOperation.DeleteRobotInfo:
-                        await DeleteRobotAsync();
-
-                        break;
-
-                    case RobotOperation.ViewRobotInfo:
-                        Console.WriteLine("執行查看機器人資訊...");
-
-                        break;
-
-                    case RobotOperation.UpdateAllApiKeys:
-                        await UpdateRobotApiKeyInfoAsync();
-                        break;
-
-                    case RobotOperation.RunDirectly:
-                        Console.WriteLine("執行直接運行...");
-
-                        break;
-
-                    case RobotOperation.Exit:
-                        Console.WriteLine("退出程式...");
-                        return;
-
-                    default:
-                        Console.WriteLine("無效操作！");
-                        break;
+                    }
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    LoggerHelper.LogError($"資料庫操作失敗: {dbEx.InnerException?.Message ?? dbEx.Message}");
+                }
+                catch (Exception e)
+                {
+                    LoggerHelper.LogError($"執行失敗，錯誤訊息：{e.Message}");
                 }
             }
-            catch (DbUpdateException dbEx)
+        }
+
+        private async Task<bool> HandleOperationAsync(RobotOperation operation)
+        {
+            switch (operation)
             {
-                LoggerHelper.LogError($"資料庫操作失敗: {dbEx.InnerException?.Message ?? dbEx.Message}");
+                case RobotOperation.CreateRobotInfo:
+                    await CreateRobotAsync();
+                    break;
+
+                case RobotOperation.UpdateRobotParameters:
+                    LoggerHelper.LogInfo("執行更新機器人參數資訊...");
+                    break;
+
+                case RobotOperation.DeleteRobotInfo:
+                    await DeleteRobotAsync();
+                    break;
+
+                case RobotOperation.ViewRobotInfo:
+                    await ViewRobotInfoAsync();
+                    break;
+
+                case RobotOperation.UpdateAllApiKeys:
+                    await UpdateRobotApiKeyInfoAsync();
+                    break;
+
+                case RobotOperation.RunDirectly:
+                    LoggerHelper.LogInfo("執行直接運行...");
+                    return true;
+
+                default:
+                    LoggerHelper.LogInfo("無效操作，請重新選擇！");
+                    break;
             }
-            catch (Exception e)
-            {
-                LoggerHelper.LogError($"執行失敗，錯誤訊息：{e.Message}");
-            }
-            
+
+            return false; // 返回 false，繼續循環
         }
 
         #region Create Robot
@@ -182,6 +188,29 @@
                 }
                 Console.WriteLine("輸入無效，請重新輸入！");
             }
+        }
+
+        #endregion
+
+        #region View Robot Info
+
+        private async Task ViewRobotInfoAsync()
+        {
+            LoggerHelper.LogInfo("執行查看機器人資訊...");
+            var robots = await _gridRobotRepository.GetAllRobotsAsync();
+            if (robots.Count == 0)
+            {
+                Console.WriteLine("沒有機器人資訊！");
+                return;
+            }
+
+            Console.WriteLine("所有機器人資訊：");
+            foreach (var robot in robots)
+            {
+                Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
+                Console.WriteLine($"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Leverage} , 網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} , 網格數量 : {robot.GridCount} ");
+            }
+            LoggerHelper.LogInfo("查看完畢");
         }
 
         #endregion

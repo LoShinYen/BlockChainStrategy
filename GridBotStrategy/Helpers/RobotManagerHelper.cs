@@ -9,11 +9,10 @@
             Console.WriteLine("1. 創建機器人資訊");
             Console.WriteLine("2. 更新機器人參數資訊(開發中)");
             Console.WriteLine("3. 刪除機器人資訊");
-            Console.WriteLine("4. 查看機器人資訊(開發中)");
+            Console.WriteLine("4. 查看機器人資訊");
             Console.WriteLine("5. 更新所有機器人 API Key");
-            Console.WriteLine("6. 直接運行(開發中)");
-            Console.WriteLine("7. 退出");
-            Console.WriteLine("請輸入操作編號 (1-7):");    
+            Console.WriteLine("6. 直接運行");
+            Console.WriteLine("請輸入操作編號 (1-6):");    
             while (true)
             {
                 string? input = Console.ReadLine();

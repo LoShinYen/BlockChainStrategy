@@ -8,6 +8,5 @@
         ViewRobotInfo = 4,
         UpdateAllApiKeys = 5,
         RunDirectly = 6,
-        Exit = 7
     }
 }
