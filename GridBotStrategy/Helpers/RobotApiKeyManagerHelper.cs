@@ -1,6 +1,6 @@
 ﻿namespace GridBotStrategy.Helpers
 {
-    internal class RobotApiKeyManager
+    internal class RobotApiKeyManagerHelper
     {
         internal static void UpdateApiKeys()
         {
