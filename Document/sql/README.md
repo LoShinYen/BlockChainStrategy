@@ -5,3 +5,6 @@
 以下是目前的資料庫結構圖：
 
 ![Database Schema](schema.png)
+
+DB First 指令 :
+Scaffold-DbContext "server=127.0.0.1;port=3306;database=crypto_platform;user=root;password=" Pomelo.EntityFrameworkCore.MySql -o ./Models/Context -f -Context "CryptoPlatformDbContext" -NoOnConfiguring
