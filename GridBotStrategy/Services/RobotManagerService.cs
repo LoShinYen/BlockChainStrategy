@@ -1,7 +1,4 @@
-﻿using BlockChainStrategy.Library.Enums.GridRobot;
-using GridBotStrategy.Enums.GridRobot;
-
-namespace GridBotStrategy.Services
+﻿namespace GridBotStrategy.Services
 {
     internal class RobotManagerService : IRobotManagerService
     {

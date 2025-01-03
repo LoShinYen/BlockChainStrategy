@@ -15,7 +15,7 @@ namespace GridBotStrategy.Helpers
             Console.WriteLine("5. 更新所有機器人 API Key");
             Console.WriteLine("6. 直接運行");
             Console.WriteLine("7. 退出");
-
+            Console.WriteLine("請輸入操作編號 (1-7):");    
             while (true)
             {
                 string? input = Console.ReadLine();

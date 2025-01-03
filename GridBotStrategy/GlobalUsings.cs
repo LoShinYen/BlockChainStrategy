@@ -1,9 +1,9 @@
-﻿global using BlockChainStrategy.Library.Helpers;
-global using GridBotStrategy.Helpers;
-global using GridBotStrategy.Services.Interface;
-global using GridBotStrategy.Enums;
-global using GridBotStrategy.Repository.Interface;
+﻿global using BlockChainStrategy.Library.Enums.GridRobot;
+global using BlockChainStrategy.Library.Helpers;
 global using BlockChainStrategy.Library.Models.Context;
+global using GridBotStrategy.Enums.GridRobot;
+global using GridBotStrategy.Helpers;
 global using GridBotStrategy.Repository;
+global using GridBotStrategy.Repository.Interface;
+global using GridBotStrategy.Services.Interface;
 global using Microsoft.EntityFrameworkCore;
-global using BlockChainStrategy.Library.Enums;
