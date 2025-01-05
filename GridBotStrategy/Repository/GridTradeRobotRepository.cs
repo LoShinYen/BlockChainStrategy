@@ -31,6 +31,12 @@
             }
         }
 
+        public void UpdateRobot(GridTradeRobot robot)
+        {
+            _context.GridTradeRobots.Update(robot);
+            _context.SaveChanges();
+        }
+
         public async Task UpdateAPIKeyAsync(string encryptedApiKey, string encryptedApiSecret)
         {
             await _context.GridTradeRobots

@@ -9,6 +9,8 @@
 
         Task DeleteRobotAsync(int robotId);
 
+        void UpdateRobot(GridTradeRobot robot);
+
         Task UpdateAPIKeyAsync(string encryptedApiKey, string encryptedApiSecret);
     }
 }

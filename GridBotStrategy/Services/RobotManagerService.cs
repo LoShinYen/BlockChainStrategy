@@ -43,7 +43,7 @@
                     break;
 
                 case RobotOperation.UpdateRobotParameters:
-                    LoggerHelper.LogInfo("執行更新機器人參數資訊...");
+                    await UpdateRobotParamsInfoAsync();
                     break;
 
                 case RobotOperation.DeleteRobotInfo:
@@ -152,6 +152,105 @@
 
         #endregion
 
+        #region Update Robot Parameters
+
+        private async Task UpdateRobotParamsInfoAsync()
+        {
+            LoggerHelper.LogInfo("執行更新機器人參數資訊...");
+            var robots = await _gridRobotRepository.GetAllRobotsAsync();
+
+            if (robots.Count == 0)
+            {
+                Console.WriteLine("沒有機器人資訊！");
+                return;
+            }
+
+            ShowRobotInfo(robots);
+            var inputRobotId = CkeckInptRobotIdValidated(robots, "請輸入要更新的機器人編號：");
+
+            ShowSelectParams();
+
+            var inputParam = ValidateUpdateParamInput();
+
+            var selectRobot = robots.First(r => r.GridTradeRobotId == inputRobotId);
+
+            UpdateParams(selectRobot, inputParam);
+        }
+
+        private static void ShowSelectParams()
+        {
+            Console.WriteLine("請輸入要更新的參數：");
+            foreach (var param in Enum.GetValues(typeof(UpdateRobotParams)))
+            {
+                Console.WriteLine($"{(int)param}: {param}");
+            }
+        }
+
+        private UpdateRobotParams ValidateUpdateParamInput()
+        {
+            while (true)
+            {
+                var input = RobotManagerHelper.GetValidatedIntInput("請輸入參數編號：");
+                if (Enum.IsDefined(typeof(UpdateRobotParams), input))
+                {
+                    return (UpdateRobotParams)input;
+                }
+                Console.WriteLine("無效的參數選擇，請重新輸入！");
+            }
+        }
+
+        private void UpdateParams(GridTradeRobot robot, UpdateRobotParams inputParam)
+        {
+            switch (inputParam)
+            {
+                case UpdateRobotParams.Status:
+                    var newStatus = RobotManagerHelper.GetValidatedInput("請輸入新的狀態（Open/Cancel）：");
+                    robot.StatusEnum = inputParam.ToString().Equals("Open", StringComparison.OrdinalIgnoreCase) ? GridTradeRobotStatus.Open : GridTradeRobotStatus.Cancel;
+                    break;
+
+                case UpdateRobotParams.Symbol:
+                    var newSymbol = RobotManagerHelper.GetValidatedInput("請輸入新的交易貨幣（如：BTCUSDT）：");
+                    robot.Symbol = newSymbol;
+                    break;
+
+                case UpdateRobotParams.PositionSide:
+                    var newPositionSide = GetValidatedPositionSide();
+                    robot.PositionSide = newPositionSide;
+                    break;
+
+                case UpdateRobotParams.GridCount:
+                    var newGridCount = GetValidatedPositiveInteger("請輸入新的網格數量：", "網格數量必須大於 0，請重新輸入！");
+                    robot.GridCount = newGridCount;
+                    break;
+
+                case UpdateRobotParams.Leverage:
+                    var newLaverage = GetValidatedPositiveInteger("請輸入新的槓桿倍數：", "槓桿倍數不能為負，請重新輸入！");
+                    robot.Leverage = newLaverage;
+                    break;
+
+                case UpdateRobotParams.PriceRange:
+                    var (newMinPrice, newMaxPrice) = GetValidatedPriceRange();
+                    robot.MinPrice = newMinPrice;
+                    robot.MaxPrice = newMaxPrice;
+                    break;
+
+                case UpdateRobotParams.ApiKey:
+                    var (newApiKey, newApiSecret) = RobotManagerHelper.EncryptApiKeys();
+                    robot.EncryptedApiKey = newApiKey;
+                    robot.EncryptedApiSecret = newApiSecret;
+                    break;
+
+                default:
+                    LoggerHelper.LogInfo("選擇的參數無效！");
+                    break;
+            }
+
+            robot.UpdatedAt = DateTime.UtcNow;
+            _gridRobotRepository.UpdateRobot(robot);
+        }
+
+        #endregion
+
         #region Delete Robot
 
         private async Task DeleteRobotAsync()
@@ -171,23 +270,10 @@
                 Console.WriteLine($"交易貨幣：{robot.Symbol} , 槓桿倍數 : {robot.Leverage} , 網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} ");
             }
 
-            int deleteRobotId = CkeckInptDeleteRobotId(robots);
+            int deleteRobotId = CkeckInptRobotIdValidated(robots, "請輸入要刪除的機器人編號：");
 
             await _gridRobotRepository.DeleteRobotAsync(deleteRobotId);
             LoggerHelper.LogInfo($"機器人 RobotID : {deleteRobotId} 刪除成功！");
-        }
-
-        private int CkeckInptDeleteRobotId(List<GridTradeRobot> robots)
-        {
-            while (true)
-            {
-                int deleteRobotId = RobotManagerHelper.GetValidatedIntInput("請輸入要刪除的機器人編號：");
-                if (robots.Any(r => r.GridTradeRobotId == deleteRobotId))
-                {
-                    return deleteRobotId;
-                }
-                Console.WriteLine("輸入無效，請重新輸入！");
-            }
         }
 
         #endregion
@@ -203,19 +289,7 @@
                 Console.WriteLine("沒有機器人資訊！");
                 return;
             }
-
-            Console.WriteLine("所有機器人資訊：");
-            foreach (var robot in robots)
-            {
-                var apiKey = EncryptionHelper.Decrypt(robot.EncryptedApiKey);
-                var apiSecret = EncryptionHelper.Decrypt(robot.EncryptedApiSecret);
-                Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
-                Console.WriteLine(
-                    $"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Leverage} , " +
-                    $"網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} , 網格數量 : {robot.GridCount} ,"+
-                    $"API Key : {apiKey} , API Secret : {apiSecret}"
-                );
-            }
+            ShowRobotInfo(robots);
             LoggerHelper.LogInfo("查看完畢");
         }
 
@@ -231,5 +305,36 @@
         }
 
         #endregion
+
+        private int CkeckInptRobotIdValidated(List<GridTradeRobot> robots, string prompt)
+        {
+            while (true)
+            {
+                int deleteRobotId = RobotManagerHelper.GetValidatedIntInput(prompt);
+                if (robots.Any(r => r.GridTradeRobotId == deleteRobotId))
+                {
+                    return deleteRobotId;
+                }
+                Console.WriteLine("輸入無效，請重新輸入！");
+            }
+        }
+
+        private static void ShowRobotInfo(List<GridTradeRobot> robots)
+        {
+            Console.WriteLine("所有機器人資訊：");
+
+            foreach (var robot in robots)
+            {
+                var apiKey = EncryptionHelper.Decrypt(robot.EncryptedApiKey);
+                var apiSecret = EncryptionHelper.Decrypt(robot.EncryptedApiSecret);
+                Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
+                Console.WriteLine(
+                    $"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Leverage} , " +
+                    $"網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} , 網格數量 : {robot.GridCount} ," +
+                    $"API Key : {apiKey} , API Secret : {apiSecret}"
+                );
+            }
+        }
+
     }
 }

@@ -2,12 +2,15 @@
 {
     internal class RobotManagerHelper
     {
-
+        /// <summary>
+        /// 詢問使用者操作
+        /// </summary>
+        /// <returns></returns>
         internal static RobotOperation AskForUserOperateRobotInfo()
         {
             Console.WriteLine("請問使用者想要執行何種操作:");
             Console.WriteLine("1. 創建機器人資訊");
-            Console.WriteLine("2. 更新機器人參數資訊(開發中)");
+            Console.WriteLine("2. 更新機器人參數資訊");
             Console.WriteLine("3. 刪除機器人資訊");
             Console.WriteLine("4. 查看機器人資訊");
             Console.WriteLine("5. 更新所有機器人 API Key");
@@ -21,7 +24,7 @@
                     return (RobotOperation)choice;
                 }
 
-                Console.WriteLine("無效的選項，請重新輸入有效的操作編號 (1-7):");
+                Console.WriteLine("無效的選項，請重新輸入有效的操作編號 (1-6):");
             }
 
         }
