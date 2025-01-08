@@ -1,17 +1,21 @@
-﻿using GridBotStrategy.Observers;
+﻿using BlockChainStrategy.Library.Models;
+using GridBotStrategy.Observers;
 
 namespace GridBotStrategy.Services
 {
     internal class TradeExecutionService : IMarketDataObserver
     {
-        public void OnMarketDataReceived(string message)
+        public void OnMarketDataReceived(BinanceMarketPriceData message)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"接收到市場數據：{message.Symbol} - {message.MarkPrice}");
         }
 
         public async Task ExcuteTradeAsync()
         {
+            while(true)
+            {
             
+            }
         }
 
     }

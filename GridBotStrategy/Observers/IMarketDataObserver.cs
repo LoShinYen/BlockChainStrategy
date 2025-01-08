@@ -1,7 +1,9 @@
-﻿namespace GridBotStrategy.Observers
+﻿using BlockChainStrategy.Library.Models;
+
+namespace GridBotStrategy.Observers
 {
     internal interface IMarketDataObserver
     {
-        void OnMarketDataReceived(string message);
+        void OnMarketDataReceived(BinanceMarketPriceData message);
     }
 }

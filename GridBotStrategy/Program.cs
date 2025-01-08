@@ -30,9 +30,13 @@ class Program
                 #endregion
 
                 #region Service
-
                 services.AddScoped<IRobotManagerService, RobotManagerService>();
+                services.AddScoped<TradeExecutionService>();
+                #endregion
 
+                #region Helper
+                services.AddScoped<MarketDataSubscriptionManager>();
+                services.AddScoped<HeartbeatManager>();
                 #endregion
             })
             .Build();
@@ -47,9 +51,8 @@ class Program
 
         ws.Subscribe(trade);
 
-        task.Add(Task.Run(async () => { await ws.ConnectAsync(); }));
-        task.Add(Task.Run(async () => { await trade.ExcuteTradeAsync(); }));
-
+        task.Add(Task.Run(async () => { await ws.ConnectAsync();}));
+        task.Add(Task.Run(async () => { await trade.ExcuteTradeAsync();}));
 
         await Task.WhenAll(task);
 
