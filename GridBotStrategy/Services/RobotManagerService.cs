@@ -1,12 +1,17 @@
-﻿namespace GridBotStrategy.Services
+﻿using GridBotStrategy.Models;
+using Newtonsoft.Json;
+
+namespace GridBotStrategy.Services
 {
     internal class RobotManagerService : IRobotManagerService
     {
         private readonly IGridTradeRobotRepository _gridRobotRepository;
+        private readonly IGridTradeDetailRepository _gridTradeDetailRepository;
 
-        public RobotManagerService(IGridTradeRobotRepository gridTradeRobotRepository)
+        public RobotManagerService(IGridTradeRobotRepository gridTradeRobotRepository, IGridTradeDetailRepository gridTradeDetailRepository)
         {
             _gridRobotRepository = gridTradeRobotRepository;
+            _gridTradeDetailRepository = gridTradeDetailRepository;
         }
 
         public async Task ExcuteAsync()
@@ -100,8 +105,40 @@
                 EncryptedApiSecret = encryptedApiSecret
             };
 
-            await _gridRobotRepository.CreateRobotAsync(robot);
+            await CreateRobotInfoAsync(robot);
             LoggerHelper.LogInfo("機器人創建成功！");
+        }
+
+        private async Task CreateRobotInfoAsync(GridTradeRobot robot)
+        {
+            await _gridRobotRepository.CreateRobotAsync(robot);
+            var positions = CalcutePositionInfo(robot);
+            var robotDetails = new GridTradeRobotDetail
+            {
+                GridTradeRobotId = robot.GridTradeRobotId,
+                GridInfos = JsonConvert.SerializeObject(positions),
+            };
+
+            await _gridTradeDetailRepository.CreateRobotDetailAsync(robotDetails);
+        }
+
+        private List<TradeRobotPosition> CalcutePositionInfo(GridTradeRobot robot)
+        {
+            var positions = new List<TradeRobotPosition>();
+
+            decimal gridAmount = (robot.MaxPrice - robot.MinPrice) / robot.GridCount;
+
+            for (int i = 0; i < robot.GridCount-1; i++)
+            {
+                var position = new TradeRobotPosition
+                {
+                    TargetPrice = robot.MinPrice + gridAmount * i,
+                    IsActivated = false,
+                };
+                positions.Add(position);
+            }
+
+            return positions;
         }
 
         private static string GetValidatedPositionSide()

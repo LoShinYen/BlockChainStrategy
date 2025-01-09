@@ -21,6 +21,15 @@
             return robots;
         }
 
+        public async Task<List<GridTradeRobot>> GetRunningRobotsAsync()
+        {
+            var robots = await _context.GridTradeRobots
+                .Where(r => r.Status == GridTradeRobotStatus.Open.ToString())
+                .Include(r => r.GridTradeRobotDetails)
+                .ToListAsync();
+            return robots;
+        }
+
         public async Task DeleteRobotAsync(int robotId)
         {
             var robot = await _context.GridTradeRobots.FindAsync(robotId);

@@ -1,15 +1,15 @@
 ﻿using BlockChainStrategy.Library.Models;
 using GridBotStrategy.Observers;
-using GridBotStrategy.Strategies;
+using System.Threading.Channels;
 
 namespace GridBotStrategy.Services
 {
     internal class TradeExecutionService : IMarketDataObserver
     {
         private Dictionary<string,decimal> _symbolMarkPrice = new Dictionary<string, decimal>();
-        private readonly GridTradeRobotRepository _robotRepository;
+        private readonly IGridTradeRobotRepository _robotRepository;
 
-        public TradeExecutionService(GridTradeRobotRepository robotRepository)
+        public TradeExecutionService(IGridTradeRobotRepository robotRepository)
         {
             _robotRepository = robotRepository;
         }
@@ -34,21 +34,50 @@ namespace GridBotStrategy.Services
 
         public async Task ExcuteTradeAsync()
         {
-            while(true)
+            var robots = await _robotRepository.GetRunningRobotsAsync();
+            var channel = Channel.CreateUnbounded<GridTradeRobot>();
+
+            _ = Task.Run(async () =>
             {
-                var robots = await _robotRepository.GetAllRobotsAsync();
-                foreach (var robot in robots)
+                while (true)
                 {
-                    if (_symbolMarkPrice.TryGetValue(robot.Symbol, out var currentMarketPrice))
+
+                    foreach (var robot in robots)
                     {
-                        var strategy = TradeStrategyFactory.GetStrategy(robot.PositionSideEnum);
-                        await strategy.ExecuteTradeAsync(robot, currentMarketPrice);
+                        await channel.Writer.WriteAsync(robot);
                     }
-
+                    await Task.Delay(1000);
                 }
+            });
 
-            }
+            var consumers = Enumerable.Range(0, 5).Select(async _ =>
+            {
+                while (await channel.Reader.WaitToReadAsync())
+                {
+                    if (channel.Reader.TryRead(out var robot))
+                    {
+                        try
+                        {
+                            if (_symbolMarkPrice.TryGetValue(robot.Symbol, out var currentMarketPrice))
+                            {
+                                //var strategy = TradeStrategyFactory.GetStrategy(robot.PositionSideEnum);
+                                //await strategy.ExecuteTradeAsync(robot, currentMarketPrice);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            LoggerHelper.LogError($"Robot Id: {robot.GridTradeRobotId}, {ex.Message}");
+                        }
+                    }
+                }
+            });
+
+            await Task.WhenAll(consumers);
         }
 
+        private bool CheckTargetPrice(decimal currentPrice, decimal targetPrice, decimal tolerance)
+        {
+            return currentPrice >= targetPrice - tolerance && currentPrice <= targetPrice + tolerance;
+        }
     }
 }

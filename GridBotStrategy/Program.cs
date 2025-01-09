@@ -24,9 +24,8 @@ class Program
                 #endregion
 
                 #region Repository
-
                 services.AddScoped<IGridTradeRobotRepository, GridTradeRobotRepository>();
-
+                services.AddScoped<IGridTradeDetailRepository, GridTradeDetailRepository>();
                 #endregion
 
                 #region Service
