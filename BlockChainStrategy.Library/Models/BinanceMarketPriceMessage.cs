@@ -9,7 +9,7 @@ namespace BlockChainStrategy.Library.Models
         public string Stream { get; set; } = string.Empty;
 
         public BinanceMarketPriceData Data { get; set; } = new BinanceMarketPriceData();
-
+            
     }
 
     public class BinanceMarketPriceData

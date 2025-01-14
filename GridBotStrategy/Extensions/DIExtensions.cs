@@ -16,7 +16,8 @@ namespace GridBotStrategy.Extensions
 
         private static IServiceCollection AddMappings(this IServiceCollection services)
         {
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(typeof(GridTradeMappingProfile));
             return services;
         }
 

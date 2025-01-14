@@ -1,4 +1,5 @@
-﻿using GridBotStrategy.Extensions;
+﻿using AutoMapper;
+using GridBotStrategy.Extensions;
 using GridBotStrategy.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -12,7 +13,6 @@ class Program
             LoggerHelper.LogInfo("程式開始");
 
             IHost host = BuildHost(args);
-
             await RunApplicationAsync(host);
         }
         catch (Exception ex)
@@ -45,6 +45,7 @@ class Program
         await RobotManageAsync(host);
         await RunningTradeAsync(host);
     }
+
 
     private static async Task RobotManageAsync(IHost host)
     {

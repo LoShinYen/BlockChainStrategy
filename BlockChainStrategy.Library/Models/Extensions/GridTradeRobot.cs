@@ -1,5 +1,4 @@
 ﻿using BlockChainStrategy.Library.Enums.GridRobot;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlockChainStrategy.Library.Models.Context
 {

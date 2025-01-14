@@ -1,6 +1,6 @@
 ﻿namespace GridBotStrategy.Models
 {
-    class TradeRobotPosition
+    public class TradeRobotPosition
     {
         public decimal TargetPrice { get; set; }
 

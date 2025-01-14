@@ -1,4 +1,5 @@
-﻿using BlockChainStrategy.Library.Models;
+﻿using AutoMapper;
+using BlockChainStrategy.Library.Models;
 using GridBotStrategy.Observers;
 using System.Threading.Channels;
 
@@ -8,10 +9,12 @@ namespace GridBotStrategy.Services
     {
         private Dictionary<string,decimal> _symbolMarkPrice = new Dictionary<string, decimal>();
         private readonly IGridTradeRobotRepository _robotRepository;
+        private readonly IMapper _mapper;
 
-        public TradeExecutionService(IGridTradeRobotRepository robotRepository)
+        public TradeExecutionService(IGridTradeRobotRepository robotRepository, IMapper mapper)
         {
             _robotRepository = robotRepository;
+            _mapper = mapper;
         }
 
         public void OnMarketDataReceived(BinanceMarketPriceData message)
@@ -34,8 +37,10 @@ namespace GridBotStrategy.Services
 
         public async Task ExcuteTradeAsync()
         {
-            var robots = await _robotRepository.GetRunningRobotsAsync();
-            var channel = Channel.CreateUnbounded<GridTradeRobot>();
+            var robotDbInfo = await _robotRepository.GetRunningRobotsAsync();
+            var robots = _mapper.Map<List<TradeRobotDto>>(robotDbInfo);
+
+            var channel = Channel.CreateUnbounded<TradeRobotDto>();
 
             _ = Task.Run(async () =>
             {
@@ -66,7 +71,7 @@ namespace GridBotStrategy.Services
                         }
                         catch (Exception ex)
                         {
-                            LoggerHelper.LogError($"Robot Id: {robot.GridTradeRobotId}, {ex.Message}");
+                            LoggerHelper.LogError($"Robot Id: {robot.RobotId}, {ex.Message}");
                         }
                     }
                 }

@@ -2,11 +2,11 @@
 {
     internal class TradeRobotDto
     {
-        internal int GridTradeRobotId { get; set; }
+        internal int RobotId { get; set; }
 
         internal string Symbol { get; set; } = string.Empty;
 
-        internal TradeRobotPosition Postions { get; set; } = new TradeRobotPosition();
+        internal List<TradeRobotPosition> Postions { get; set; } = new List<TradeRobotPosition>();
 
         internal string ApiKey { get; set; } = string.Empty;
 
