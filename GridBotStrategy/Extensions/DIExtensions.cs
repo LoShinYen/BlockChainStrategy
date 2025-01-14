@@ -14,34 +14,34 @@ namespace GridBotStrategy.Extensions
             return services;
         }
 
-        internal static IServiceCollection AddMappings(this IServiceCollection services)
+        private static IServiceCollection AddMappings(this IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }
 
-        internal static IServiceCollection AddRepositories(this IServiceCollection services)
+        private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IGridTradeRobotRepository, GridTradeRobotRepository>();
             services.AddScoped<IGridTradeDetailRepository, GridTradeDetailRepository>();
             return services;
         }
 
-        internal static IServiceCollection AddServices(this IServiceCollection services)
+        private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IRobotManagerService, RobotManagerService>();
             services.AddScoped<TradeExecutionService>();
             return services;
         }
 
-        internal static IServiceCollection AddHelpers(this IServiceCollection services)
+        private static IServiceCollection AddHelpers(this IServiceCollection services)
         {
             services.AddScoped<MarketDataSubscriptionManager>();
             services.AddScoped<HeartbeatManager>();
             return services;
         }
 
-        internal static IServiceCollection AddDatabase(this IServiceCollection services, string? connectionString)
+        private static IServiceCollection AddDatabase(this IServiceCollection services, string? connectionString)
         {
             services.AddDbContext<CryptoPlatformDbContext>(options =>
             {
