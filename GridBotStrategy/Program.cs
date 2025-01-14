@@ -1,6 +1,6 @@
-﻿using GridBotStrategy.Services;
+﻿using GridBotStrategy.Extensions;
+using GridBotStrategy.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 class Program
@@ -14,29 +14,8 @@ class Program
             })
             .ConfigureServices((context, services) =>
             {
-
-                #region DB
                 var connectionString = context.Configuration.GetConnectionString("CryptoPlatformDb");
-                services.AddDbContext<CryptoPlatformDbContext>(options =>
-                {
-                    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 32)));
-                });
-                #endregion
-
-                #region Repository
-                services.AddScoped<IGridTradeRobotRepository, GridTradeRobotRepository>();
-                services.AddScoped<IGridTradeDetailRepository, GridTradeDetailRepository>();
-                #endregion
-
-                #region Service
-                services.AddScoped<IRobotManagerService, RobotManagerService>();
-                services.AddScoped<TradeExecutionService>();
-                #endregion
-
-                #region Helper
-                services.AddScoped<MarketDataSubscriptionManager>();
-                services.AddScoped<HeartbeatManager>();
-                #endregion
+                DIExtensions.AddServicesAndDependencies(services, connectionString);
             })
             .Build();
         

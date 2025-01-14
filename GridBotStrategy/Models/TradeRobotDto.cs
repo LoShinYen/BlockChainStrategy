@@ -1,6 +1,6 @@
 ﻿namespace GridBotStrategy.Models
 {
-    internal class TradeRobot
+    internal class TradeRobotDto
     {
         internal int GridTradeRobotId { get; set; }
 
@@ -11,6 +11,10 @@
         internal string ApiKey { get; set; } = string.Empty;
 
         internal string ApiSecret { get; set; } = string.Empty;
+
+        internal GridTradeRobotStatus StatusEnum { get; set; }
+
+        internal GridTradeRobotPositionSide PositionSideEnum { get; set; }
 
     }
 }
