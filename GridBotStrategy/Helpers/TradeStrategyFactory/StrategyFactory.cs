@@ -1,6 +1,8 @@
-﻿namespace GridBotStrategy.Strategies
+﻿using GridBotStrategy.Services.Strategies;
+
+namespace GridBotStrategy.Helpers.TradeStrategyFactory
 {
-    internal class TradeStrategyFactory
+    internal class StrategyFactory
     {
         public static ITradeStrategy GetStrategy(GridTradeRobotPositionSide positionSide)
         {
@@ -8,7 +10,7 @@
             {
                 GridTradeRobotPositionSide.Long => new LongTradeStrategy(),
                 GridTradeRobotPositionSide.Short => new ShortTradeStrategy(),
-                GridTradeRobotPositionSide.All => new AllTradeStrategy(),
+                GridTradeRobotPositionSide.All => new NeutralTradeStrategy(),
                 _ => throw new ArgumentException("Invalid position side")
             };
         }

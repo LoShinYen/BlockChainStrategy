@@ -1,6 +1,6 @@
-﻿using GridBotStrategy.Strategies;
+﻿using GridBotStrategy.Helpers.TradeStrategyFactory;
 
-namespace GridBotStrategy.Services
+namespace GridBotStrategy.Services.Handlers
 {
     internal class TradeHandler : ITradeHandler
     {
@@ -16,13 +16,15 @@ namespace GridBotStrategy.Services
             if (!_marketDataHandler.TryGetCurrentPrice(robot.Symbol, out var currentMarketPrice))
                 return;
 
-            var minPrice = Math.Min(robot.LastPrice, currentMarketPrice);
-            var maxPrice = Math.Max(robot.LastPrice, currentMarketPrice);
+            robot.CurrentPrice = currentMarketPrice;
+
+            var minPrice = Math.Min(robot.LastPrice, robot.CurrentPrice);
+            var maxPrice = Math.Max(robot.LastPrice, robot.CurrentPrice);
 
             if (CheckTargetPrice(robot, minPrice, maxPrice) && SelectTargetIndex(robot, minPrice, maxPrice))
             {
-                var strategy = TradeStrategyFactory.GetStrategy(robot.PositionSideEnum);
-                await strategy.ExecuteTradeAsync(robot, currentMarketPrice);
+                var strategy = StrategyFactory.GetStrategy(robot.PositionSideEnum);
+                await strategy.ExecuteTradeAsync(robot);
             }
 
             robot.LastPrice = currentMarketPrice;

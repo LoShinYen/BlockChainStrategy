@@ -1,4 +1,5 @@
 ﻿using GridBotStrategy.Services;
+using GridBotStrategy.Services.Handlers;
 
 namespace GridBotStrategy.Extensions
 {

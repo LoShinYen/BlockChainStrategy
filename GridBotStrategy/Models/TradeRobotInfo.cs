@@ -27,6 +27,9 @@
         /// </summary>
         public decimal LastPrice { get; set; }
 
+        public decimal CurrentPrice { get; set; }
+
+
         /// <summary>
         /// 上次觸發目標價格
         /// </summary>

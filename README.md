@@ -33,6 +33,7 @@
 ### 待完成
 - **TradeExecutionService**
   - 交易完成後資料存取   
+- **幣安API串接**
 - **空頭與中性策略**
   - 計劃加入更多交易策略，涵蓋空頭與中性場景。
 - **單元測試**
@@ -55,17 +56,28 @@ BlockChainStrategy/
 │   │   ├── migrations/  # 數據庫遷移腳本
 │   │   └── schema/      # 數據庫結構快照
 │   └── README.md        # 文檔概述
-├── GridBotStrategy/
-|   ├── Enums/           # 枚舉類型
-│   ├── Extensions/      # DI 註冊與擴展方法
-│   ├── Helpers/         # 輔助工具類
-│   ├── Mappings/        # AutoMapper 配置
-│   ├── Models/          # 業務邏輯轉型
-│   ├── Observers/       # WebSocket 觀察者模式
-|   ├── Repository/      # 資料訪問層
-│   ├── Services/        # 網格交易核心服務
-│   ├── Strategies/      # 策略模式基礎與實現
-│   └── Program.cs       # 主程式入口
+│ GridBotStrategy/
+│   ├── Enums/                        # 枚舉類型
+│   ├── Extensions/                   # 擴展方法
+│   ├── Helpers/                      # 工具類與輔助方法
+│   │   └── TradeStrategyFactory      # 策略工廠
+│   ├── Mappings/                     # AutoMapper 配置
+│   ├── Models/                       # DTO 與業務模型
+│   ├── Observers/                    # 觀察者模式的實現
+│   ├── Repository/                   # 資料存取層
+│   ├── Services/                     # 核心服務
+│   │   ├── Interface/                # 服務接口
+│   │   ├── Handlers/                 # 流程調度與處理類
+│   │   │   └── TradeHandler.cs       # 交易流程判定
+│   │   ├── TradeExecutionService.cs  # 業務執行服務
+│   │   ├── TradeOperationService.cs  # 交易基礎操作服務
+|   |   └── RobotManagerService.cs    # 使用者操作服務
+│   ├── Strategies/                   # 策略類
+│   │   ├── ITradeStrategy.cs
+│   │   ├── LongTradeStrategy.cs
+│   │   ├── NeutralTradeStrategy.cs
+│   │   └── ShortTradeStrategy.cs
+│   └── Program.cs                 # 主程序入口
 ├── UnifiedWsGateway/
 │   ├── Services/        # WebSocket 統一接口
 │   └── Models/          # 市場數據模型
