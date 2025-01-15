@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using GridBotStrategy.Extensions;
+﻿using GridBotStrategy.Extensions;
 using GridBotStrategy.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -60,7 +59,7 @@ class Program
         LoggerHelper.LogInfo("開始執行交易策略...");
         var task = new List<Task>();
         var trade = host.Services.GetRequiredService<TradeExecutionService>();
-        var ws = host.Services.GetRequiredService<MarketDataSubscriptionManager>();
+        var ws = host.Services.GetRequiredService<MarketDataSubscriptionHandler>();
         ws.Subscribe(trade);
 
         task.Add(Task.Run(async () => { await ws.ConnectAsync(); }));

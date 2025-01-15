@@ -3,7 +3,7 @@ using System.Text;
 
 namespace GridBotStrategy.Helpers
 {
-    internal class HeartbeatManager
+    internal class HeartbeatHandler
     {
 
         private const int HeartbeatIntervalMs = 15 * 60 * 1000; // 心跳間隔 15 分鐘

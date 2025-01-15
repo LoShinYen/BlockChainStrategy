@@ -1,7 +1,7 @@
 ﻿namespace GridBotStrategy.Strategies
 {
-    internal interface ITradeStrategy
+    public interface ITradeStrategy
     {
-        Task ExecuteTradeAsync(GridTradeRobot robot, decimal currentMarketPrice);
+        Task ExecuteTradeAsync(TradeRobotInfo robot, decimal currentMarketPrice);
     }
 }

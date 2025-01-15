@@ -1,8 +1,8 @@
 ﻿namespace GridBotStrategy.Strategies
 {
-    internal class ShortTradeStrategy : ITradeStrategy
+    public class ShortTradeStrategy : BaseStrategy, ITradeStrategy
     {
-        public Task ExecuteTradeAsync(GridTradeRobot robot, decimal currentMarketPrice)
+        public Task ExecuteTradeAsync(TradeRobotInfo robot, decimal currentMarketPrice)
         {
             throw new NotImplementedException();
         }

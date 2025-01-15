@@ -1,8 +1,10 @@
-﻿global using BlockChainStrategy.Library.Enums.GridRobot;
+﻿global using AutoMapper;
+global using BlockChainStrategy.Library.Enums.GridRobot;
 global using BlockChainStrategy.Library.Helpers;
 global using BlockChainStrategy.Library.Models.Context;
 global using GridBotStrategy.Enums.GridRobot;
 global using GridBotStrategy.Helpers;
+global using GridBotStrategy.Helpers.Interface;
 global using GridBotStrategy.Mappings;
 global using GridBotStrategy.Models;
 global using GridBotStrategy.Repository;

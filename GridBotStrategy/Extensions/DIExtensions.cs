@@ -16,7 +16,6 @@ namespace GridBotStrategy.Extensions
 
         private static IServiceCollection AddMappings(this IServiceCollection services)
         {
-            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddAutoMapper(typeof(GridTradeMappingProfile));
             return services;
         }
@@ -32,13 +31,15 @@ namespace GridBotStrategy.Extensions
         {
             services.AddScoped<IRobotManagerService, RobotManagerService>();
             services.AddScoped<TradeExecutionService>();
+            services.AddScoped<ITradeHandler, TradeHandler>();
             return services;
         }
 
         private static IServiceCollection AddHelpers(this IServiceCollection services)
         {
-            services.AddScoped<MarketDataSubscriptionManager>();
-            services.AddScoped<HeartbeatManager>();
+            services.AddScoped<MarketDataSubscriptionHandler>();
+            services.AddScoped<HeartbeatHandler>();
+            services.AddScoped<IMarketDataHandler, MarketDataHandler>();
             return services;
         }
 

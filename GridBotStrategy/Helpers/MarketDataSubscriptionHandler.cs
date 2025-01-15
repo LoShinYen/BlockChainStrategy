@@ -6,18 +6,18 @@ using System.Text;
 
 namespace GridBotStrategy.Helpers
 {
-    internal class MarketDataSubscriptionManager
+    internal class MarketDataSubscriptionHandler
     {
         private readonly List<IMarketDataObserver> _observers = new(); // 訂閱者列表
         private readonly ClientWebSocket _clientWebSocket;
-        private readonly HeartbeatManager _heartbeatManager;
+        private readonly HeartbeatHandler _heartbeatManager;
         private readonly string _serverUri = "ws://localhost:5001/subscribe";
         private const int ReconnectDelayMs = 5000; // 重試間隔（毫秒）
 
-        public MarketDataSubscriptionManager()
+        public MarketDataSubscriptionHandler()
         {
             _clientWebSocket = new ClientWebSocket();
-            _heartbeatManager = new HeartbeatManager();
+            _heartbeatManager = new HeartbeatHandler();
         }
 
         public async Task ConnectAsync()
