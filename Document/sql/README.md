@@ -9,7 +9,7 @@
 
 ## 文件清單
 - **Migrations**：
-  - `migrations/20250114.sql`：執行 ALTER TABLE 操作。
+  - `migrations/20250115.sql`：執行 ALTER TABLE 操作。
 - **Schema**：
   - 完整DB Schema 可直接 mysql Import。
 
