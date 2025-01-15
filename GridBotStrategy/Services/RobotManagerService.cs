@@ -100,7 +100,7 @@ namespace GridBotStrategy.Services
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,
                 GridCount = gridCount,
-                Leverage = laverage,
+                Laverage = laverage,
                 EncryptedApiKey = encryptedApiKey,
                 EncryptedApiSecret = encryptedApiSecret
             };
@@ -263,7 +263,7 @@ namespace GridBotStrategy.Services
 
                 case UpdateRobotParams.Leverage:
                     var newLaverage = GetValidatedPositiveInteger("請輸入新的槓桿倍數：", "槓桿倍數不能為負，請重新輸入！");
-                    robot.Leverage = newLaverage;
+                    robot.Laverage = newLaverage;
                     break;
 
                 case UpdateRobotParams.PriceRange:
@@ -305,7 +305,7 @@ namespace GridBotStrategy.Services
             foreach (var robot in robots)
             {
                 Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
-                Console.WriteLine($"交易貨幣：{robot.Symbol} , 槓桿倍數 : {robot.Leverage} , 網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} ");
+                Console.WriteLine($"交易貨幣：{robot.Symbol} , 槓桿倍數 : {robot.Laverage} , 網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} ");
             }
 
             int deleteRobotId = CkeckInptRobotIdValidated(robots, "請輸入要刪除的機器人編號：");
@@ -367,7 +367,7 @@ namespace GridBotStrategy.Services
                 var apiSecret = EncryptionHelper.Decrypt(robot.EncryptedApiSecret);
                 Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
                 Console.WriteLine(
-                    $"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Leverage} , " +
+                    $"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Laverage} , " +
                     $"網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} , 網格數量 : {robot.GridCount} ," +
                     $"API Key : {apiKey} , API Secret : {apiSecret}"
                 );
