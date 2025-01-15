@@ -38,9 +38,9 @@ namespace GridBotStrategy.Services
         public async Task ExcuteTradeAsync()
         {
             var robotDbInfo = await _robotRepository.GetRunningRobotsAsync();
-            var robots = _mapper.Map<List<TradeRobotDto>>(robotDbInfo);
+            var robots = _mapper.Map<List<TradeRobotInfo>>(robotDbInfo);
 
-            var channel = Channel.CreateUnbounded<TradeRobotDto>();
+            var channel = Channel.CreateUnbounded<TradeRobotInfo>();
 
             _ = Task.Run(async () =>
             {
@@ -65,8 +65,11 @@ namespace GridBotStrategy.Services
                         {
                             if (_symbolMarkPrice.TryGetValue(robot.Symbol, out var currentMarketPrice))
                             {
+
+
                                 //var strategy = TradeStrategyFactory.GetStrategy(robot.PositionSideEnum);
                                 //await strategy.ExecuteTradeAsync(robot, currentMarketPrice);
+                                robot.LastPrice = currentMarketPrice;
                             }
                         }
                         catch (Exception ex)
@@ -80,9 +83,12 @@ namespace GridBotStrategy.Services
             await Task.WhenAll(consumers);
         }
 
-        private bool CheckTargetPrice(decimal currentPrice, decimal targetPrice, decimal tolerance)
+        private bool CheckTargetPrice(TradeRobotInfo robot , decimal currentPrice)
         {
-            return currentPrice >= targetPrice - tolerance && currentPrice <= targetPrice + tolerance;
+
+
+
+            return false;
         }
     }
 }

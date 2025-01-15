@@ -6,7 +6,7 @@ namespace GridBotStrategy.Mappings
     {
         public GridTradeMappingProfile() 
         {
-            CreateMap<GridTradeRobot, TradeRobotDto>()
+            CreateMap<GridTradeRobot, TradeRobotInfo>()
                 .ForMember(dest => dest.RobotId, opt => opt.MapFrom(src => src.GridTradeRobotId))
                 .ForMember(dest => dest.Symbol, opt => opt.MapFrom(src => src.Symbol))
                 .ForMember(dest => dest.ApiKey, opt => opt.MapFrom(src => EncryptionHelper.Decrypt(src.EncryptedApiKey)))

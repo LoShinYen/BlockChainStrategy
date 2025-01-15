@@ -33,10 +33,7 @@ public partial class GridTradeRobot
     /// </summary>
     public int GridCount { get; set; }
 
-    /// <summary>
-    /// 槓桿倍數
-    /// </summary>
-    public int? Leverage { get; set; }
+    public int? Laverage { get; set; }
 
     /// <summary>
     /// 金額上限

@@ -132,6 +132,7 @@ namespace GridBotStrategy.Services
             {
                 var position = new TradeRobotPosition
                 {
+                    TargetIndex = i,
                     TargetPrice = robot.MinPrice + gridAmount * i,
                     IsActivated = false,
                 };

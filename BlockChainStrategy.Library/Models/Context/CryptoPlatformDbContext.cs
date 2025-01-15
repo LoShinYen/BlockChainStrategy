@@ -52,11 +52,9 @@ public partial class CryptoPlatformDbContext : DbContext
                 .HasComment("網格數量")
                 .HasColumnType("int(11)")
                 .HasColumnName("grid_count");
-            entity.Property(e => e.Leverage)
-                .HasDefaultValueSql("'1'")
-                .HasComment("槓桿倍數")
+            entity.Property(e => e.Laverage)
                 .HasColumnType("int(11)")
-                .HasColumnName("leverage");
+                .HasColumnName("laverage");
             entity.Property(e => e.MaxPrice)
                 .HasPrecision(13, 6)
                 .HasComment("金額上限")
