@@ -17,7 +17,14 @@
             }
             else
             {
-
+                if (_tradeOperationService.CheckPriceIsRaise(robot.LastPrice, robot.CurrentPrice))
+                {
+                    await _tradeOperationService.RaisePositionAsync();
+                }
+                else
+                {
+                    await _tradeOperationService.ClosePositionAsync();
+                }
             }
         }
     }

@@ -24,5 +24,10 @@
             // Close Position
         }
 
+        public bool CheckPriceIsRaise(decimal lastPrice, decimal currentPrice)
+        {
+            return lastPrice < currentPrice;
+        }
+
     }
 }
