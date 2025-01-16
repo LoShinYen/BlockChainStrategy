@@ -2,7 +2,7 @@
 
 namespace GridBotStrategy.Helpers.Interface
 {
-    internal interface IMarketDataHandler
+    internal interface IMarketDataHelper
     {
         void UpdateMarketPrice(BinanceMarketPriceData message);
 

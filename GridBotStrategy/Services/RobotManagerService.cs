@@ -1,5 +1,4 @@
-﻿using GridBotStrategy.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace GridBotStrategy.Services
 {

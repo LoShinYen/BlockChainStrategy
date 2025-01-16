@@ -4,9 +4,9 @@ namespace GridBotStrategy.Services.Handlers
 {
     internal class TradeHandler : ITradeHandler
     {
-        private readonly IMarketDataHandler _marketDataHandler;
+        private readonly IMarketDataHelper _marketDataHandler;
 
-        public TradeHandler(IMarketDataHandler marketDataHandler)
+        public TradeHandler(IMarketDataHelper marketDataHandler)
         {
             _marketDataHandler = marketDataHandler;
         }
