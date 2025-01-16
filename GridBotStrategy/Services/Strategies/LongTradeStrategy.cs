@@ -1,29 +1,23 @@
 ﻿namespace GridBotStrategy.Services.Strategies
 {
-    public class LongTradeStrategy : ITradeStrategy
+    public class LongTradeStrategy : BaseStratgyService, ITradeStrategy
     {
-        private readonly TradeOperationService _tradeOperationService;
-
-        public LongTradeStrategy(TradeOperationService tradeOperationService)
-        {
-            _tradeOperationService = tradeOperationService;
-        }
 
         public async Task ExecuteTradeAsync(TradeRobotInfo robot)
         {
-            if (_tradeOperationService.CheckIsOpen(robot.CurrentPositionCount))
+            if (CheckIsOpen(robot.CurrentPositionCount))
             {
-                await _tradeOperationService.OpenPositionAsync();
+                await OpenPositionAsync();
             }
             else
             {
-                if (_tradeOperationService.CheckPriceIsRaise(robot.LastPrice, robot.CurrentPrice))
+                if (CheckPriceIsRaise(robot.LastPrice, robot.CurrentPrice))
                 {
-                    await _tradeOperationService.RaisePositionAsync();
+                    await RaisePositionAsync();
                 }
                 else
                 {
-                    await _tradeOperationService.ClosePositionAsync();
+                    await ClosePositionAsync();
                 }
             }
         }

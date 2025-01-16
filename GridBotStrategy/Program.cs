@@ -1,4 +1,6 @@
-﻿using GridBotStrategy.Extensions;
+﻿using BlockChainStrategy.Library.Enums.Binance;
+using BlockChainStrategy.Library.Models.Dto;
+using GridBotStrategy.Extensions;
 using GridBotStrategy.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -45,7 +47,6 @@ class Program
         await RunningTradeAsync(host);
     }
 
-
     private static async Task RobotManageAsync(IHost host)
     {
         LoggerHelper.LogInfo("開始機器人管理操作...");
@@ -68,4 +69,5 @@ class Program
         await Task.WhenAll(task);
         LoggerHelper.LogInfo("交易策略執行完成");
     }
+
 }

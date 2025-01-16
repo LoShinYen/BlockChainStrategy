@@ -1,4 +1,4 @@
-﻿using BlockChainStrategy.Library.Models;
+﻿using BlockChainStrategy.Library.Models.Dto;
 using GridBotStrategy.Observers;
 using Newtonsoft.Json;
 using System.Net.WebSockets;
@@ -54,7 +54,7 @@ namespace GridBotStrategy.Helpers
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
                         var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                        var response = JsonConvert.DeserializeObject<BinanceMarketPriceData>(message);
+                        var response = JsonConvert.DeserializeObject<BinanceMarketPriceDataDto>(message);
                         NotifyObservers(response!);
                     }
                     else if (result.MessageType == WebSocketMessageType.Close)
@@ -82,7 +82,7 @@ namespace GridBotStrategy.Helpers
             _observers.Remove(observer);
         }
 
-        private void NotifyObservers(BinanceMarketPriceData message)
+        private void NotifyObservers(BinanceMarketPriceDataDto message)
         {
             foreach (var observer in _observers)
             {

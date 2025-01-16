@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BlockChainStrategy.Library.Models.Dto;
+using Newtonsoft.Json;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -107,7 +108,7 @@ namespace UnifiedWsGateway.Services
         {
             try
             {
-                var marketPriceData = JsonConvert.DeserializeObject<BinanceMarketPriceMessage>(message);
+                var marketPriceData = JsonConvert.DeserializeObject<BinanceMarketPriceResponseDto>(message);
                 var pubStr = JsonConvert.SerializeObject(marketPriceData!.Data);
                 OnMarketDataReceived?.Invoke(pubStr);
             }

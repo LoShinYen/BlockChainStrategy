@@ -1,13 +1,7 @@
 ﻿namespace GridBotStrategy.Services.Strategies
 {
-    public class ShortTradeStrategy : ITradeStrategy
+    public class ShortTradeStrategy : BaseStratgyService, ITradeStrategy
     {
-        private readonly TradeOperationService _tradeOperationService;
-
-        public ShortTradeStrategy(TradeOperationService tradeOperationService)
-        {
-            _tradeOperationService = tradeOperationService;
-        }
 
         public Task ExecuteTradeAsync(TradeRobotInfo robot)
         {

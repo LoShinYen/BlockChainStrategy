@@ -1,4 +1,4 @@
-﻿using BlockChainStrategy.Library.Models;
+﻿using BlockChainStrategy.Library.Models.Dto;
 using GridBotStrategy.Observers;
 using System.Threading.Channels;
 
@@ -19,7 +19,7 @@ namespace GridBotStrategy.Services
             _tradeHandler = tradeHandler;
         }
 
-        public void OnMarketDataReceived(BinanceMarketPriceData message)
+        public void OnMarketDataReceived(BinanceMarketPriceDataDto message)
         {
             _marketDataHandler.UpdateMarketPrice(message);
         }

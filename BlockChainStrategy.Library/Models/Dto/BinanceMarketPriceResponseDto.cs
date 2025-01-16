@@ -1,24 +1,22 @@
-﻿using Newtonsoft.Json;
-
-namespace BlockChainStrategy.Library.Models
+﻿namespace BlockChainStrategy.Library.Models.Dto
 {
 
 
-    public class BinanceMarketPriceMessage
+    public class BinanceMarketPriceResponseDto
     {
         public string Stream { get; set; } = string.Empty;
 
-        public BinanceMarketPriceData Data { get; set; } = new BinanceMarketPriceData();
-            
+        public BinanceMarketPriceDataDto Data { get; set; } = new BinanceMarketPriceDataDto();
+
     }
 
-    public class BinanceMarketPriceData
+    public class BinanceMarketPriceDataDto
     {
         /// <summary>
         /// 事件類型
         /// </summary>
         [JsonProperty("e")]
-        public string EventType { get; set; }  = string.Empty;
+        public string EventType { get; set; } = string.Empty;
 
         /// <summary>
         /// 事件時間

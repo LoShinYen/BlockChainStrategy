@@ -1,5 +1,4 @@
 ﻿using GridBotStrategy.Models;
-using System.Text.Json;
 
 namespace BlockChainStrategy.Library.Models.Context
 {
@@ -8,10 +7,9 @@ namespace BlockChainStrategy.Library.Models.Context
         [NotMapped]
         public List<TradeRobotPosition> Postions
         {
-            get => JsonSerializer.Deserialize<List<TradeRobotPosition>>(GridInfos) ?? new List<TradeRobotPosition>();
-            set => GridInfos = JsonSerializer.Serialize(value);
+            get => System.Text.Json.JsonSerializer.Deserialize<List<TradeRobotPosition>>(GridInfos) ?? new List<TradeRobotPosition>();
+            set => GridInfos = System.Text.Json.JsonSerializer.Serialize(value);
         }
 
     }
-
 }

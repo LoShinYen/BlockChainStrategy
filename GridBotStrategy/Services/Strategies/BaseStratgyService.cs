@@ -1,6 +1,6 @@
 ﻿namespace GridBotStrategy.Services
 {
-    public class TradeOperationService
+    public class BaseStratgyService
     {
         public bool CheckIsOpen(int currentPositionCount)
         {

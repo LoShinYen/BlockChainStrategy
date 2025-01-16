@@ -1,4 +1,4 @@
-﻿using BlockChainStrategy.Library.Models;
+﻿using BlockChainStrategy.Library.Models.Dto;
 
 namespace GridBotStrategy.Helpers
 {
@@ -6,7 +6,7 @@ namespace GridBotStrategy.Helpers
     {
         private Dictionary<string, decimal> _symbolMarkPrice = new();
 
-        public void UpdateMarketPrice(BinanceMarketPriceData message)
+        public void UpdateMarketPrice(BinanceMarketPriceDataDto message)
         {
             if (decimal.TryParse(message.MarkPrice, out var price))
             {
