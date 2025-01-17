@@ -26,6 +26,7 @@ CREATE TABLE `grid_trade_robots` (
   `grid_trade_robot_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '機器人ID',
   `status` enum('Open','Running','Cancel') NOT NULL COMMENT '狀態',
   `symbol` varchar(20) NOT NULL COMMENT '交易標的',
+  `amount_usdt` decimal(12,4) DEFAULT NULL COMMENT 'USDT金額',
   `position_side` enum('Long','Short','All') NOT NULL COMMENT '持倉方向',
   `grid_count` int(11) NOT NULL COMMENT '網格數量',
   `laverage` int(11) DEFAULT NULL,
@@ -36,7 +37,7 @@ CREATE TABLE `grid_trade_robots` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '建立時間',
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間',
   PRIMARY KEY (`grid_trade_robot_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='網格交易機器人';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='網格交易機器人';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +49,4 @@ CREATE TABLE `grid_trade_robots` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-15  9:22:31
+-- Dump completed on 2025-01-17 20:56:30

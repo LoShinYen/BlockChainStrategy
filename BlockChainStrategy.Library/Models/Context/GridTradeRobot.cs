@@ -24,6 +24,11 @@ public partial class GridTradeRobot
     public string Symbol { get; set; } = null!;
 
     /// <summary>
+    /// USDT金額
+    /// </summary>
+    public decimal? AmountUsdt { get; set; }
+
+    /// <summary>
     /// 持倉方向
     /// </summary>
     public string PositionSide { get; set; } = null!;

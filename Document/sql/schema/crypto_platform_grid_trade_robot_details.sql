@@ -32,7 +32,7 @@ CREATE TABLE `grid_trade_robot_details` (
   PRIMARY KEY (`grid_trade_robot_detail_id`),
   KEY `grid_trade_robot_id` (`grid_trade_robot_id`),
   CONSTRAINT `grid_trade_robot_details_ibfk_1` FOREIGN KEY (`grid_trade_robot_id`) REFERENCES `grid_trade_robots` (`grid_trade_robot_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='網格交易機器人詳細';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='網格交易機器人詳細';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -44,4 +44,4 @@ CREATE TABLE `grid_trade_robot_details` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-15  9:22:31
+-- Dump completed on 2025-01-17 20:56:30

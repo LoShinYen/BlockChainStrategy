@@ -35,6 +35,10 @@ public partial class CryptoPlatformDbContext : DbContext
                 .HasComment("機器人ID")
                 .HasColumnType("int(11)")
                 .HasColumnName("grid_trade_robot_id");
+            entity.Property(e => e.AmountUsdt)
+                .HasPrecision(12, 4)
+                .HasComment("USDT金額")
+                .HasColumnName("amount_usdt");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("current_timestamp()")
                 .HasComment("建立時間")
