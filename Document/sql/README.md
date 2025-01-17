@@ -1,7 +1,10 @@
 # SQL 文件說明
 
 ## 更新紀錄
-- **更新日期**：2025-01-15
+- **更新日期** ：  2025-01-17
+- **描述**：
+  - 新增 `grid_trade_robots` 表的欄位 `amount_usdt` 資料型別 `decimal(12,4)`。
+- **更新日期** ：  2025-01-15
 - **描述**：
   - 修改 `grid_trade_robots` 表的欄位 `leverage`。
   - 將欄位名稱改為 `laverage`。
@@ -9,7 +12,7 @@
 
 ## 文件清單
 - **Migrations**：
-  - `migrations/20250115.sql`：執行 ALTER TABLE 操作。
+  - 歷次DB異動資料。
 - **Schema**：
   - 完整DB Schema 可直接 mysql Import。
 
