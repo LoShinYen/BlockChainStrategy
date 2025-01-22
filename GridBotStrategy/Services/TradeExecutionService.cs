@@ -7,21 +7,21 @@ namespace GridBotStrategy.Services
     internal class TradeExecutionService : IMarketDataObserver
     {
         private readonly IGridTradeRobotRepository _robotRepository;
-        private readonly IMarketDataHelper _marketDataHandler;
+        private readonly IMarketDataService _marketDataService;
         private readonly IMapper _mapper;
         private readonly ITradeHandler _tradeHandler;
 
-        public TradeExecutionService(IGridTradeRobotRepository robotRepository, IMapper mapper , IMarketDataHelper marketDataHandler, ITradeHandler tradeHandler)
+        public TradeExecutionService(IGridTradeRobotRepository robotRepository, IMapper mapper , IMarketDataService marketDataService, ITradeHandler tradeHandler)
         {
             _robotRepository = robotRepository;
             _mapper = mapper;
-            _marketDataHandler = marketDataHandler;
+            _marketDataService = marketDataService;
             _tradeHandler = tradeHandler;
         }
 
         public void OnMarketDataReceived(BinanceMarketPriceDataDto message)
         {
-            _marketDataHandler.UpdateMarketPrice(message);
+            _marketDataService.UpdateMarketPrice(message);
         }
 
 

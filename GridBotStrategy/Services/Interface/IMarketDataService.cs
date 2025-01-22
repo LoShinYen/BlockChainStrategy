@@ -1,8 +1,8 @@
 ﻿using BlockChainStrategy.Library.Models.Dto;
 
-namespace GridBotStrategy.Helpers.Interface
+namespace GridBotStrategy.Services.Interface
 {
-    internal interface IMarketDataHelper
+    internal interface IMarketDataService
     {
         void UpdateMarketPrice(BinanceMarketPriceDataDto message);
 

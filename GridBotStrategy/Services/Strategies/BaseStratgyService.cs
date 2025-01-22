@@ -1,4 +1,7 @@
-﻿namespace GridBotStrategy.Services
+﻿using BlockChainStrategy.Library.Models.Dto;
+using BlockChainStrategy.Library.Enums.Binance;
+
+namespace GridBotStrategy.Services
 {
     public class BaseStratgyService
     {
@@ -8,18 +11,31 @@
             return false;
         }
 
-        public async Task OpenPositionAsync()
+        public async Task OpenPositionAsync(TradeRobotInfo robot)
         {
-            // Open Position
+            var binacneHelper = new BinanceHelper(robot.ApiKey,robot.ApiSecret,true);
+         
+            await binacneHelper.ChangePositionModeAsync(true);
+
+            var laverge = new BinanceChangeLeverageRequestDto() { Leverage = robot.Laverage , Symbol = robot.Symbol };
+            await binacneHelper.ChangeLeverageAsync(laverge);
+
+            var createOrder = new BinanceCreateOrderRequestDto()
+            {
+                Symbol = robot.Symbol,
+                Side = OrderSide.BUY,
+                Quantity = robot.PerTradeAmountUSDT,
+            };
+            await binacneHelper.CreateOrderAsync(createOrder);
         }
 
 
-        public async Task RaisePositionAsync()
+        public async Task RaisePositionAsync(TradeRobotInfo robot)
         {
             // Raise Position
         }
 
-        public async Task ClosePositionAsync()
+        public async Task ClosePositionAsync(TradeRobotInfo robot)
         {
             // Close Position
         }

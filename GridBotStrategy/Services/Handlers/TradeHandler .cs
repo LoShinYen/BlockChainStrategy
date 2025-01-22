@@ -4,16 +4,16 @@ namespace GridBotStrategy.Services.Handlers
 {
     internal class TradeHandler : ITradeHandler
     {
-        private readonly IMarketDataHelper _marketDataHandler;
+        private readonly IMarketDataService _marketDataService;
 
-        public TradeHandler(IMarketDataHelper marketDataHandler)
+        public TradeHandler(IMarketDataService marketDataService)
         {
-            _marketDataHandler = marketDataHandler;
+            _marketDataService = marketDataService;
         }
 
         public async Task HandleTradeAsync(TradeRobotInfo robot)
         {
-            if (!_marketDataHandler.TryGetCurrentPrice(robot.Symbol, out var currentMarketPrice))
+            if (!_marketDataService.TryGetCurrentPrice(robot.Symbol, out var currentMarketPrice))
                 return;
 
             robot.CurrentPrice = currentMarketPrice;

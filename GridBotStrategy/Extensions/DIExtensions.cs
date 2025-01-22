@@ -40,7 +40,7 @@ namespace GridBotStrategy.Extensions
         {
             services.AddScoped<MarketDataSubscriptionHandler>();
             services.AddScoped<HeartbeatHandler>();
-            services.AddScoped<IMarketDataHelper, MarketDataHelper>();
+            services.AddScoped<IMarketDataService, MarketDataService>();
             return services;
         }
 

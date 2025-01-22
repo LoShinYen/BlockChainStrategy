@@ -1,8 +1,8 @@
 ﻿using BlockChainStrategy.Library.Models.Dto;
 
-namespace GridBotStrategy.Helpers
+namespace GridBotStrategy.Services
 {
-    internal class MarketDataHelper : IMarketDataHelper
+    internal class MarketDataService : IMarketDataService
     {
         private Dictionary<string, decimal> _symbolMarkPrice = new();
 
@@ -29,5 +29,11 @@ namespace GridBotStrategy.Helpers
         {
             return _symbolMarkPrice.TryGetValue(symbol, out currentPrice);
         }
+
+        //public decimal CalculateOrderAmount()
+        //{ 
+        
+        //}
+
     }
 }

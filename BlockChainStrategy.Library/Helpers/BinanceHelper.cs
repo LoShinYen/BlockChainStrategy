@@ -68,6 +68,11 @@ namespace BlockChainStrategy.Library.Helpers
             return result;
         }
 
+        /// <summary>
+        /// 切換持倉模式
+        /// </summary>
+        /// <param name="dualSidePosition">true 雙向持倉, false 單向持倉</param>
+        /// <returns></returns>
         public async Task<BinanceChangePositionModeResponseDto?> ChangePositionModeAsync(bool dualSidePosition)
         {
             string endpoint = "/positionSide/dual";

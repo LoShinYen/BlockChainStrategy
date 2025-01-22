@@ -7,17 +7,17 @@
         {
             if (CheckIsOpen(robot.CurrentPositionCount))
             {
-                await OpenPositionAsync();
+                await OpenPositionAsync(robot);
             }
             else
             {
                 if (CheckPriceIsRaise(robot.LastPrice, robot.CurrentPrice))
                 {
-                    await RaisePositionAsync();
+                    await RaisePositionAsync(robot);
                 }
                 else
                 {
-                    await ClosePositionAsync();
+                    await ClosePositionAsync(robot);
                 }
             }
         }
