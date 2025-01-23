@@ -1,6 +1,4 @@
-﻿using GridBotStrategy.Models;
-
-namespace BlockChainStrategy.Library.Models.Context
+﻿namespace BlockChainStrategy.Library.Models.Context
 {
     public partial class GridTradeRobotDetail
     {

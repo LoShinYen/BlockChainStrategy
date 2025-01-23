@@ -7,7 +7,7 @@
         {
             if (CheckIsOpen(robot.CurrentPositionCount))
             {
-                await OpenPositionAsync(robot);
+                await RaisePositionAsync(robot);
             }
             else
             {
@@ -17,7 +17,7 @@
                 }
                 else
                 {
-                    await ClosePositionAsync(robot);
+                    await ReducePositionAsync(robot);
                 }
             }
         }

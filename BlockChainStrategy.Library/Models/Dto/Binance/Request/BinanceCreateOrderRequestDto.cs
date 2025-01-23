@@ -1,6 +1,7 @@
-﻿using BlockChainStrategy.Library.Enums.Binance;
+﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Enums.Binance;
 
-namespace BlockChainStrategy.Library.Models.Dto
+namespace BlockChainStrategy.Library.Models.Dto.Binance.Request
 {
     public class BinanceCreateOrderRequestDto
     {
@@ -14,19 +15,19 @@ namespace BlockChainStrategy.Library.Models.Dto
         /// 買賣方向
         /// </summary>
         [JsonProperty("side")]
-        public OrderSide Side { get; set; }
+        public OrderSideStatus Side { get; set; }
 
         /// <summary>
         /// 持倉方向（雙向持倉模式下使用）
         /// </summary>
         [JsonProperty("positionSide")]
-        public PositionSideType PositionSide { get; set; } = PositionSideType.BOTH;
+        public PositionSideType PositionSide { get; set; } = PositionSideType.LONG;
 
         /// <summary>
         /// 訂單類型
         /// </summary>
         [JsonProperty("type")]
-        public OrderType Type { get; set; } = OrderType.LIMIT;
+        public OrderType Type { get; set; } = OrderType.MARKET;
 
         /// <summary>
         /// 訂單數量
@@ -38,13 +39,13 @@ namespace BlockChainStrategy.Library.Models.Dto
         /// 訂單價格（僅適用於限價單）
         /// </summary>
         [JsonProperty("price")]
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; } = 0;
 
         /// <summary>
-        /// 時間有效性策略，例如 GTC, IOC, FOK
+        /// 時間有效性策略，例如 GTC, IOC, FOK , 默認 GTC
         /// </summary>
         [JsonProperty("timeInForce")]
-        public string? TimeInForce { get; set; } = "GTC";
+        public string TimeInForce { get; set; } = "GTC";
 
         /// <summary>
         /// 客戶端自定義訂單標識符

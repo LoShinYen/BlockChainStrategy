@@ -1,23 +1,23 @@
-﻿namespace BlockChainStrategy.Library.Models.Dto
+﻿namespace BlockChainStrategy.Library.Models.Dto.Binance.Response
 {
-    public class BinanceChangeLeverageRequestDto
+    public class BinanceChangeLeverageResponseDto
     {
         /// <summary>
-        /// 交易對，例如 BTCUSDT
+        /// 交易對
         /// </summary>
         [JsonProperty("symbol")]
         public string Symbol { get; set; } = string.Empty;
 
         /// <summary>
-        /// 新的槓桿倍數，介於 1 到 125
+        /// 已調整的槓桿倍數
         /// </summary>
         [JsonProperty("leverage")]
         public int Leverage { get; set; }
 
         /// <summary>
-        /// 當前時間戳
+        /// 可用資金
         /// </summary>
-        [JsonProperty("timestamp")]
-        public long Timestamp { get; set; }
+        [JsonProperty("maxNotionalValue")]
+        public string MaxNotionalValue { get; set; } = string.Empty;
     }
 }

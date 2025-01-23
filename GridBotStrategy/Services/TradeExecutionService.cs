@@ -1,4 +1,4 @@
-﻿using BlockChainStrategy.Library.Models.Dto;
+﻿using BlockChainStrategy.Library.Models.Dto.Binance;
 using GridBotStrategy.Observers;
 using System.Threading.Channels;
 

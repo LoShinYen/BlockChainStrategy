@@ -1,4 +1,4 @@
-﻿using BlockChainStrategy.Library.Models.Dto;
+﻿using BlockChainStrategy.Library.Models.Dto.Binance;
 using Newtonsoft.Json;
 using System.Net.WebSockets;
 using System.Text;

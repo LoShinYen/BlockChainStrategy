@@ -1,4 +1,4 @@
-﻿using BlockChainStrategy.Library.Models.Dto;
+﻿using BlockChainStrategy.Library.Models.Dto.Binance;
 
 namespace GridBotStrategy.Services
 {
@@ -29,11 +29,5 @@ namespace GridBotStrategy.Services
         {
             return _symbolMarkPrice.TryGetValue(symbol, out currentPrice);
         }
-
-        //public decimal CalculateOrderAmount()
-        //{ 
-        
-        //}
-
     }
 }

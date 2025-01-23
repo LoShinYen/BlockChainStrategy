@@ -1,4 +1,4 @@
-﻿namespace GridBotStrategy.Models
+﻿namespace BlockChainStrategy.Library.Models.Dto.Utility
 {
     public class TradeRobotPosition
     {

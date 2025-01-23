@@ -1,4 +1,7 @@
-﻿using GridBotStrategy.Extensions;
+﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Exchange;
+using BlockChainStrategy.Library.Models.Dto.Binance.Request;
+using GridBotStrategy.Extensions;
 using GridBotStrategy.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;

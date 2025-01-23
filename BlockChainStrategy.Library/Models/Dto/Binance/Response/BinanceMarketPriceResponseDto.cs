@@ -1,4 +1,4 @@
-﻿namespace BlockChainStrategy.Library.Models.Dto
+﻿namespace BlockChainStrategy.Library.Models.Dto.Binance
 {
 
 

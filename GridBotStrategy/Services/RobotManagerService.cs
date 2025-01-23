@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BlockChainStrategy.Library.Models.Dto.Utility;
+using Newtonsoft.Json;
 
 namespace GridBotStrategy.Services
 {
