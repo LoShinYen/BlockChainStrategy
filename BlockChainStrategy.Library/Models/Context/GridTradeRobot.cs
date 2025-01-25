@@ -70,6 +70,8 @@ public partial class GridTradeRobot
     /// </summary>
     public DateTime UpdatedAt { get; set; }
 
+    public string Exchange { get; set; } = null!;
+
     public virtual ICollection<GridTradeRobotDetail> GridTradeRobotDetails { get; set; } = new List<GridTradeRobotDetail>();
 
     public virtual ICollection<GridTradeRobotOrder> GridTradeRobotOrders { get; set; } = new List<GridTradeRobotOrder>();

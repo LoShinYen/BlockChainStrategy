@@ -1,4 +1,5 @@
-﻿using BlockChainStrategy.Library.Enums.GridRobot;
+﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Enums.GridRobot;
 
 namespace BlockChainStrategy.Library.Models.Context
 {
@@ -17,5 +18,13 @@ namespace BlockChainStrategy.Library.Models.Context
             get => Enum.Parse<GridTradeRobotPositionSide>(PositionSide);
             set => PositionSide = value.ToString();
         }
+
+        [NotMapped]
+        public ExchangeType ExchangeTypeEnum
+        {
+            get => Enum.Parse<ExchangeType>(Exchange);
+            set => Exchange = value.ToString();
+        }
+
     }
 }

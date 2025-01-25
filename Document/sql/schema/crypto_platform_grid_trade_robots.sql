@@ -36,6 +36,7 @@ CREATE TABLE `grid_trade_robots` (
   `encrypted_api_secret` text NOT NULL COMMENT 'API Secret',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '建立時間',
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間',
+  `exchange` enum('Binance','Bybit') NOT NULL DEFAULT 'Binance',
   PRIMARY KEY (`grid_trade_robot_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='網格交易機器人';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -49,4 +50,4 @@ CREATE TABLE `grid_trade_robots` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-17 20:56:30
+-- Dump completed on 2025-01-25 22:14:18

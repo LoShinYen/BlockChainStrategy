@@ -52,6 +52,10 @@ public partial class CryptoPlatformDbContext : DbContext
                 .HasComment("API Secret")
                 .HasColumnType("text")
                 .HasColumnName("encrypted_api_secret");
+            entity.Property(e => e.Exchange)
+                .HasDefaultValueSql("'Binance'")
+                .HasColumnType("enum('Binance','Bybit')")
+                .HasColumnName("exchange");
             entity.Property(e => e.GridCount)
                 .HasComment("網格數量")
                 .HasColumnType("int(11)")
