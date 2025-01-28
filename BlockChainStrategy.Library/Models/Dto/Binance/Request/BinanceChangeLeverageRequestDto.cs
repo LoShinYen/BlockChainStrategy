@@ -12,12 +12,12 @@
         /// 新的槓桿倍數，介於 1 到 125
         /// </summary>
         [JsonProperty("leverage")]
-        public int Leverage { get; set; }
+        public int Laverage { get; set; }
 
         /// <summary>
         /// 當前時間戳
         /// </summary>
         [JsonProperty("timestamp")]
-        public long Timestamp { get; set; }
+        public string Timestamp { get; set; } = string.Empty;
     }
 }

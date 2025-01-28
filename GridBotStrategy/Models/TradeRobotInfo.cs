@@ -1,10 +1,16 @@
-﻿using BlockChainStrategy.Library.Models.Dto.Utility;
+﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Models.Dto.Utility;
 
 namespace GridBotStrategy.Models
 {
     public class TradeRobotInfo
     {
         public int RobotId { get; set; }
+
+        /// <summary>
+        /// 交易所種類
+        /// </summary>
+        public ExchangeType ExchangeTypeEnum { get; set; }
 
         /// <summary>
         /// 槓桿倍數

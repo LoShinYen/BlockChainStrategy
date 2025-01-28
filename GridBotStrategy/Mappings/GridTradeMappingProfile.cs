@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace GridBotStrategy.Mappings
+﻿namespace GridBotStrategy.Mappings
 {
     internal class GridTradeMappingProfile : Profile
     {
@@ -8,6 +6,7 @@ namespace GridBotStrategy.Mappings
         {
             CreateMap<GridTradeRobot, TradeRobotInfo>()
                 .ForMember(dest => dest.RobotId, opt => opt.MapFrom(src => src.GridTradeRobotId))
+                .ForMember(dest => dest.ExchangeTypeEnum, opt => opt.MapFrom(src => src.ExchangeTypeEnum))
                 .ForMember(dest => dest.Laverage, opt => opt.MapFrom(src => src.Laverage))
                 .ForMember(dest => dest.Symbol, opt => opt.MapFrom(src => src.Symbol))
                 .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.AmountUsdt))

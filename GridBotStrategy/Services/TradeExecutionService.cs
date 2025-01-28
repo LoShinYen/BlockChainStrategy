@@ -1,5 +1,6 @@
 ﻿using BlockChainStrategy.Library.Models.Dto.Binance;
 using GridBotStrategy.Observers;
+using System.Collections.Concurrent;
 using System.Threading.Channels;
 
 namespace GridBotStrategy.Services
@@ -10,6 +11,7 @@ namespace GridBotStrategy.Services
         private readonly IMarketDataService _marketDataService;
         private readonly IMapper _mapper;
         private readonly ITradeHandler _tradeHandler;
+        private static ConcurrentDictionary<TradeRobotInfo, bool> _processingRobots = new ConcurrentDictionary<TradeRobotInfo, bool>();
 
         public TradeExecutionService(IGridTradeRobotRepository robotRepository, IMapper mapper , IMarketDataService marketDataService, ITradeHandler tradeHandler)
         {
@@ -28,11 +30,12 @@ namespace GridBotStrategy.Services
         public async Task ExcuteTradeAsync()
         {
             List<TradeRobotInfo> robots = await LoadRobotsAsync();
+            int consumerCount = Math.Min(robots.Count, 5);
 
             Channel<TradeRobotInfo> channel = CreateChannel(robots);
 
-            IEnumerable<Task> consumers = CreateConsumer(channel);
-
+            IEnumerable<Task> consumers = CreateConsumer(channel, consumerCount);
+            
             await Task.WhenAll(consumers);
         }
 
@@ -45,7 +48,10 @@ namespace GridBotStrategy.Services
 
         private static Channel<TradeRobotInfo> CreateChannel(List<TradeRobotInfo> robots)
         {
-            var channel = Channel.CreateUnbounded<TradeRobotInfo>();
+            var channel = Channel.CreateBounded<TradeRobotInfo>(new BoundedChannelOptions(100)
+            {
+                FullMode = BoundedChannelFullMode.Wait
+            });
 
             _ = Task.Run(async () =>
             {
@@ -53,23 +59,42 @@ namespace GridBotStrategy.Services
                 {
                     foreach (var robot in robots)
                     {
-                        await channel.Writer.WriteAsync(robot);
+                        if (_processingRobots.TryAdd(robot, true))
+                        {
+                            await channel.Writer.WriteAsync(robot);
+                        }
                     }
                     await Task.Delay(500);
                 }
             });
+
             return channel;
         }
 
-        private IEnumerable<Task> CreateConsumer(Channel<TradeRobotInfo> channel)
+        private IEnumerable<Task> CreateConsumer(Channel<TradeRobotInfo> channel, int consumerCount)
         {
-            return Enumerable.Range(0, 5).Select(async _ =>
+            return Enumerable.Range(0, consumerCount).Select(async _ =>
             {
                 while (await channel.Reader.WaitToReadAsync())
                 {
                     if (channel.Reader.TryRead(out var robot))
                     {
-                        await _tradeHandler.HandleTradeAsync(robot);
+                        try
+                        {
+                            //await _tradeHandler.HandleTradeAsync(robot);
+                            await _tradeHandler.TestCreateOrderAsync(robot);
+                        }
+                        catch (Exception ex)
+                        {
+                            LoggerHelper.LogError($"發生錯誤：{ex.Message}");
+                        }
+                        finally
+                        {
+                            if (!_processingRobots.TryRemove(robot, out bool finish))
+                            {
+                                LoggerHelper.LogError($"移除處理中的機器人失敗：{robot}");
+                            }
+                        }
                     }
                 }
             });

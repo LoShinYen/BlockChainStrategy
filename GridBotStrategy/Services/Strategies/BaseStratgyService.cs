@@ -1,6 +1,5 @@
-﻿using BlockChainStrategy.Library.Models.Dto;
-using BlockChainStrategy.Library.Enums.Binance;
-using BlockChainStrategy.Library.Models.Dto.Binance;
+﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Models.Dto.Utility;
 
 namespace GridBotStrategy.Services
 {
@@ -13,8 +12,8 @@ namespace GridBotStrategy.Services
         /// <returns></returns>
         public bool CheckIsOpen(int currentPositionCount)
         {
-            if (currentPositionCount > 0) return true;
-            return false;
+            if (currentPositionCount > 0) return false;
+            return true;
         }
 
         /// <summary>
@@ -35,20 +34,29 @@ namespace GridBotStrategy.Services
         /// <returns></returns>
         public async Task RaisePositionAsync(TradeRobotInfo robot)
         {
-            //var binacneHelper = new BinanceHelper(robot.ApiKey, robot.ApiSecret, true);
+            var exchangeConfig = new ExchangeConfig() 
+            {
+                ApiKey = robot.ApiKey ,
+                ApiSecret = robot.ApiSecret ,
+                ExchangeType =  robot.ExchangeTypeEnum ,
+                Test = true
+            };
 
-            //await binacneHelper.ChangePositionModeAsync(true);
+            var orderRequest = new OrderRequest()
+            {
+                Symbol = robot.Symbol,
+                Side = OrderSideStatus.BUY,
+                UsdtQuantity = robot.PerTradeAmountUSDT,
+                CurrentPrice = robot.CurrentPrice,
+                Laverage = robot.Laverage,
+            };
 
-            //var laverge = new BinanceChangeLeverageRequestDto() { Leverage = robot.Laverage, Symbol = robot.Symbol };
-            //await binacneHelper.ChangeLeverageAsync(laverge);
+            var exchangeClient = ExchangeFactory.GetExchangeClient(exchangeConfig);
 
-            //var createOrder = new BinanceCreateOrderRequestDto()
-            //{
-            //    Symbol = robot.Symbol,
-            //    Side = OrderSide.BUY,
-            //    Quantity = robot.PerTradeAmountUSDT,
-            //};
-            //await binacneHelper.CreateOrderAsync(createOrder);
+            await exchangeClient.ListenWebSocketAsync();
+
+            await exchangeClient.CreateOrderProcessAsync(orderRequest);
+
         }
 
         /// <summary>
@@ -58,14 +66,28 @@ namespace GridBotStrategy.Services
         /// <returns></returns>
         public async Task ReducePositionAsync(TradeRobotInfo robot)
         {
-            //var binacneHelper = new BinanceHelper(robot.ApiKey, robot.ApiSecret, true);
-            //var createOrder = new BinanceCreateOrderRequestDto()
-            //{
-            //    Symbol = robot.Symbol,
-            //    Side = OrderSide.BUY,
-            //    Quantity = robot.ReduceQty,
-            //};
-            //await binacneHelper.CreateOrderAsync(createOrder);
+
+            var exchangeConfig = new ExchangeConfig()
+            {
+                ApiKey = robot.ApiKey,
+                ApiSecret = robot.ApiSecret,
+                ExchangeType = robot.ExchangeTypeEnum,
+                Test = true
+            };
+
+            var orderRequest = new OrderRequest()
+            {
+                Symbol = robot.Symbol,
+                Side = OrderSideStatus.SELL,
+                UsdtQuantity = robot.ReduceQty,
+                Laverage = robot.Laverage,
+            };
+
+            var exchangeClient = ExchangeFactory.GetExchangeClient(exchangeConfig);
+
+            await exchangeClient.ListenWebSocketAsync();
+            await exchangeClient.CreateOrderProcessAsync(orderRequest);
+
         }
     }
 }

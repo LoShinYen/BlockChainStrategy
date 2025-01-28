@@ -49,6 +49,28 @@ namespace GridBotStrategy.Services.Handlers
             robot.LastTargetPositionPrice = position.TargetPrice;
             return true;
         }
-    }
+    
+        
+        public async Task TestCreateOrderAsync(TradeRobotInfo robot)
+        {
+            if (robot.Symbol == "BTCUSDT")
+            {
+                var currentMarketPrice = 101000;
+                robot.LastPrice = 100900;
 
+                robot.CurrentPrice = currentMarketPrice;
+
+                var minPrice = Math.Min(robot.LastPrice, robot.CurrentPrice);
+                var maxPrice = Math.Max(robot.LastPrice, robot.CurrentPrice);
+
+                if (CheckTargetPrice(robot, minPrice, maxPrice) && SelectTargetIndex(robot, minPrice, maxPrice))
+                {
+                    var strategy = StrategyFactory.GetStrategy(robot.PositionSideEnum);
+                    await strategy.ExecuteTradeAsync(robot);
+                }
+
+                robot.LastPrice = currentMarketPrice;
+            }
+        }
+    }
 }

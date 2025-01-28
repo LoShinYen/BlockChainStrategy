@@ -1,7 +1,4 @@
-﻿using BlockChainStrategy.Library.Enums;
-using BlockChainStrategy.Library.Exchange;
-using BlockChainStrategy.Library.Models.Dto.Binance.Request;
-using GridBotStrategy.Extensions;
+﻿using GridBotStrategy.Extensions;
 using GridBotStrategy.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -44,7 +41,7 @@ class Program
 
     private static async Task RunApplicationAsync(IHost host)
     {
-        await RobotManageAsync(host);
+        //await RobotManageAsync(host);
         await RunningTradeAsync(host);
     }
 
@@ -64,7 +61,7 @@ class Program
         var ws = host.Services.GetRequiredService<MarketDataSubscriptionHandler>();
         ws.Subscribe(trade);
 
-        task.Add(Task.Run(async () => { await ws.ConnectAsync(); }));
+        //task.Add(Task.Run(async () => { await ws.ConnectAsync(); }));
         task.Add(Task.Run(async () => { await trade.ExcuteTradeAsync(); }));
 
         await Task.WhenAll(task);

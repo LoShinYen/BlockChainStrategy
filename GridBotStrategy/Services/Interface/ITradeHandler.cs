@@ -4,6 +4,7 @@
     {
         Task HandleTradeAsync(TradeRobotInfo robot);
 
+        Task TestCreateOrderAsync(TradeRobotInfo robot);
 
     }
 }
