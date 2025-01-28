@@ -41,7 +41,7 @@ class Program
 
     private static async Task RunApplicationAsync(IHost host)
     {
-        //await RobotManageAsync(host);
+        await RobotManageAsync(host);
         await RunningTradeAsync(host);
     }
 

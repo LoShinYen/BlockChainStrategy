@@ -90,12 +90,15 @@ namespace GridBotStrategy.Services
 
             var laverage = GetValidatedPositiveInteger("請輸入槓桿倍數(可選，輸入 0 表示默認1倍):", "槓桿倍數不能為負，請重新輸入！");
 
+            var amount = GetValidatedPositiveInteger("請輸入總金額交易金額(USDT正整數):", "交易金額必須大於 0，請重新輸入！");
+
             var (encryptedApiKey, encryptedApiSecret) = RobotManagerHelper.EncryptApiKeys();
 
             var robot = new GridTradeRobot
             {
                 Symbol = symbol,
                 StatusEnum = GridTradeRobotStatus.Open,
+                AmountUsdt = amount,
                 PositionSide = positionSide,
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,
@@ -251,6 +254,11 @@ namespace GridBotStrategy.Services
                     robot.Symbol = newSymbol;
                     break;
 
+                case UpdateRobotParams.AmountUsdt:
+                    var newAmount = GetValidatedPositiveInteger("請輸入新的總金額：", "總金額必須大於 0，請重新輸入！");
+                    robot.AmountUsdt = newAmount;
+                    break;
+
                 case UpdateRobotParams.PositionSide:
                     var newPositionSide = GetValidatedPositionSide();
                     robot.PositionSide = newPositionSide;
@@ -367,7 +375,7 @@ namespace GridBotStrategy.Services
                 var apiSecret = EncryptionHelper.Decrypt(robot.EncryptedApiSecret);
                 Console.WriteLine($"【RobotID : {robot.GridTradeRobotId}】 詳細資訊 :");
                 Console.WriteLine(
-                    $"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status}, 持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Laverage} , " +
+                    $"交易貨幣：{robot.Symbol},機器人狀態 : {robot.Status},總金額(USDT) : {robot.AmountUsdt} ,持倉方向 : {robot.PositionSide} , 槓桿倍數 : {robot.Laverage} , " +
                     $"網格金額 : {robot.MaxPrice} ~ {robot.MinPrice} , 網格數量 : {robot.GridCount} ," +
                     $"API Key : {apiKey} , API Secret : {apiSecret}"
                 );

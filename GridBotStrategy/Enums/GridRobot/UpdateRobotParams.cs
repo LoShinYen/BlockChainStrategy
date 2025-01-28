@@ -4,11 +4,12 @@
     {
         Status,
         Symbol,
+        AmountUsdt,
         PositionSide,
         GridCount,
         Leverage,
         PriceRange,
         ApiKey,
-        piSecret
+        ApiSecret
     }
 }
