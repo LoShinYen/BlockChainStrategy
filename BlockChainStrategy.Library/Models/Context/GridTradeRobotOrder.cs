@@ -29,11 +29,6 @@ public partial class GridTradeRobotOrder
     public decimal TradeAmount { get; set; }
 
     /// <summary>
-    /// 交易動作
-    /// </summary>
-    public string TradeAction { get; set; } = null!;
-
-    /// <summary>
     /// 建立時間
     /// </summary>
     public DateTime CreatedAt { get; set; }

@@ -1,6 +1,9 @@
 # SQL 文件說明
 
 ## 更新紀錄
+- **更新日期** :   2025-01-29
+- **描述**： 
+  - 異動 `grid_trade_robot_orders` 和 `grid_trade_robot_order_histories`欄位
 - **更新日期** ：  2025-01-25
 - **描述**：
   - 新增 `grid_trade_robots` 表的欄位 `exchange` 資料型別 `enum('Binance', 'Bybit')  default Binance`。

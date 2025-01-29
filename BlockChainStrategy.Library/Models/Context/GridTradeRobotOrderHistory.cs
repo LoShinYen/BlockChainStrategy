@@ -33,5 +33,7 @@ public partial class GridTradeRobotOrderHistory
     /// </summary>
     public DateTime CreatedAt { get; set; }
 
+    public string TradeAction { get; set; } = null!;
+
     public virtual GridTradeRobotOrder GridTradeRobotOrder { get; set; } = null!;
 }

@@ -154,10 +154,6 @@ public partial class CryptoPlatformDbContext : DbContext
                 .HasComment("訂單狀態")
                 .HasColumnType("enum('Running','Finish')")
                 .HasColumnName("status");
-            entity.Property(e => e.TradeAction)
-                .HasComment("交易動作")
-                .HasColumnType("enum('buy','sell')")
-                .HasColumnName("trade_action");
             entity.Property(e => e.TradeAmount)
                 .HasPrecision(12, 6)
                 .HasComment("交易數量")
@@ -199,6 +195,9 @@ public partial class CryptoPlatformDbContext : DbContext
                 .HasPrecision(13, 6)
                 .HasComment("價格")
                 .HasColumnName("price");
+            entity.Property(e => e.TradeAction)
+                .HasColumnType("enum('Buy','Sell')")
+                .HasColumnName("trade_action");
             entity.Property(e => e.TradeAmount)
                 .HasPrecision(12, 6)
                 .HasComment("交易數量")
