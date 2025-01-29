@@ -11,6 +11,7 @@ namespace GridBotStrategy.Services
         private readonly IMarketDataService _marketDataService;
         private readonly IMapper _mapper;
         private readonly ITradeHandler _tradeHandler;
+        private readonly int _maxConsumerCount = 5;
         private static ConcurrentDictionary<TradeRobotInfo, bool> _processingRobots = new ConcurrentDictionary<TradeRobotInfo, bool>();
 
         public TradeExecutionService(IGridTradeRobotRepository robotRepository, IMapper mapper , IMarketDataService marketDataService, ITradeHandler tradeHandler)
@@ -30,7 +31,7 @@ namespace GridBotStrategy.Services
         public async Task ExcuteTradeAsync()
         {
             List<TradeRobotInfo> robots = await LoadRobotsAsync();
-            int consumerCount = Math.Min(robots.Count, 5);
+            int consumerCount = Math.Min(robots.Count, _maxConsumerCount);
 
             Channel<TradeRobotInfo> channel = CreateChannel(robots);
 

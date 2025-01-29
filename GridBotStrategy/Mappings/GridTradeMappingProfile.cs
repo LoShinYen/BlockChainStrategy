@@ -14,7 +14,8 @@
                 .ForMember(dest => dest.ApiKey, opt => opt.MapFrom(src => EncryptionHelper.Decrypt(src.EncryptedApiKey)))
                 .ForMember(dest => dest.ApiSecret, opt => opt.MapFrom(src => EncryptionHelper.Decrypt(src.EncryptedApiSecret)))
                 .ForMember(dest => dest.Postions, opt => opt.MapFrom(src => src.GridTradeRobotDetails.First().Postions))
-                .ForMember(dest => dest.HoldingQty , opt => opt.MapFrom(src => src.GridTradeRobotDetails.First().HoldingAmount));
+                .ForMember(dest => dest.HoldingQty , opt => opt.MapFrom(src => src.GridTradeRobotDetails.First().HoldingAmount))
+                .ForMember(dest => dest.AvgHoldingPrice , opt => opt.MapFrom(src => src.GridTradeRobotDetails.First().AvgPrice));
         }
     }
 }

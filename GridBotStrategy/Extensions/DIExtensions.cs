@@ -24,7 +24,9 @@ namespace GridBotStrategy.Extensions
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IGridTradeRobotRepository, GridTradeRobotRepository>();
-            services.AddScoped<IGridTradeDetailRepository, GridTradeDetailRepository>();
+            services.AddScoped<IGridTradeRobotDetailRepository, GridTradeRobotDetailRepository>();
+            services.AddScoped<IGridTradeRobotOrderRepository, GridTradeRobotOrderRepository>();
+            services.AddScoped<IGridTradeRobotOrderHostoryRepository, GridTradeRobotOrderHostoryRepository>();
             return services;
         }
 

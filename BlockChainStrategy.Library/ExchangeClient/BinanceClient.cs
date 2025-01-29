@@ -156,9 +156,9 @@ namespace BlockChainStrategy.Library.Exchange
         /// <param name="waitFinalStatus">是否等待監聽回傳交易資訊</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<OrderResponse?> CreateOrderProcessAsync(OrderRequest request, bool waitFinalStatus = true)
+        public async Task<OrderResponse> CreateOrderProcessAsync(OrderRequest request, bool waitFinalStatus = true)
         {
-            var response = new OrderResponse() { Symbol = request.Symbol};
+            var response = new OrderResponse() { Symbol = request.Symbol , OrderSideStatus = request.Side};
 
             await ChangePositionModeAsync(true);
 
@@ -203,7 +203,7 @@ namespace BlockChainStrategy.Library.Exchange
                     Console.WriteLine($"訂單 {binanceRequest.NewClientOrderId} 狀態: {finalStatus}");
                     var listenInfo = _oderListenInfo[binanceRequest.NewClientOrderId];
                     response.ClientOrderId = listenInfo.ClientOrderId;
-                    response.Price = Decimal.TryParse(listenInfo.Price, out var price) ? price : 0;
+                    response.Price = Decimal.TryParse(listenInfo.LimitPrice, out var price) ? price : 0;
                     response.Quantity = Decimal.TryParse(listenInfo.Quantity, out var qty) ? qty : 0;
                 }
                 catch (Exception ex)
@@ -215,7 +215,7 @@ namespace BlockChainStrategy.Library.Exchange
                     _orderTcsMap.Remove(binanceRequest.NewClientOrderId);
                     _oderListenInfo.Remove(binanceRequest.NewClientOrderId);
                 }
-                return new OrderResponse();
+                return response;
             }
         }
 

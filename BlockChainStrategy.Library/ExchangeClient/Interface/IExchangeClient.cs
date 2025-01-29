@@ -4,6 +4,6 @@
     {
         Task ListenWebSocketAsync();
 
-        Task<OrderResponse?> CreateOrderProcessAsync(OrderRequest request, bool waitFinalStatus = true);
+        Task<OrderResponse> CreateOrderProcessAsync(OrderRequest request, bool waitFinalStatus = true);
     }
 }

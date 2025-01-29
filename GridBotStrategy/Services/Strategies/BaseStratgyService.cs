@@ -1,5 +1,4 @@
 ﻿using BlockChainStrategy.Library.Enums;
-using BlockChainStrategy.Library.Models.Dto.Utility;
 
 namespace GridBotStrategy.Services
 {
@@ -32,7 +31,7 @@ namespace GridBotStrategy.Services
         /// </summary>
         /// <param name="robot"></param>
         /// <returns></returns>
-        public async Task RaisePositionAsync(TradeRobotInfo robot)
+        public async Task<OrderResponse> RaisePositionAsync(TradeRobotInfo robot)
         {
             var exchangeConfig = new ExchangeConfig() 
             {
@@ -55,8 +54,8 @@ namespace GridBotStrategy.Services
 
             await exchangeClient.ListenWebSocketAsync();
 
-            await exchangeClient.CreateOrderProcessAsync(orderRequest);
-
+            var response = await exchangeClient.CreateOrderProcessAsync(orderRequest);
+            return response;
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace GridBotStrategy.Services
         /// </summary>
         /// <param name="robot"></param>
         /// <returns></returns>
-        public async Task ReducePositionAsync(TradeRobotInfo robot)
+        public async Task<OrderResponse> ReducePositionAsync(TradeRobotInfo robot)
         {
 
             var exchangeConfig = new ExchangeConfig()
@@ -86,8 +85,8 @@ namespace GridBotStrategy.Services
             var exchangeClient = ExchangeFactory.GetExchangeClient(exchangeConfig);
 
             await exchangeClient.ListenWebSocketAsync();
-            await exchangeClient.CreateOrderProcessAsync(orderRequest);
-
+            var response = await exchangeClient.CreateOrderProcessAsync(orderRequest);
+            return response;
         }
     }
 }

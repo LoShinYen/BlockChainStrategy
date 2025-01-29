@@ -6,9 +6,9 @@ namespace GridBotStrategy.Services
     internal class RobotManagerService : IRobotManagerService
     {
         private readonly IGridTradeRobotRepository _gridRobotRepository;
-        private readonly IGridTradeDetailRepository _gridTradeDetailRepository;
+        private readonly IGridTradeRobotDetailRepository _gridTradeDetailRepository;
 
-        public RobotManagerService(IGridTradeRobotRepository gridTradeRobotRepository, IGridTradeDetailRepository gridTradeDetailRepository)
+        public RobotManagerService(IGridTradeRobotRepository gridTradeRobotRepository, IGridTradeRobotDetailRepository gridTradeDetailRepository)
         {
             _gridRobotRepository = gridTradeRobotRepository;
             _gridTradeDetailRepository = gridTradeDetailRepository;

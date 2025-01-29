@@ -1,4 +1,6 @@
-﻿namespace BlockChainStrategy.Library.Models.Dto.Utility
+﻿using BlockChainStrategy.Library.Enums;
+
+namespace BlockChainStrategy.Library.Models.Dto.Utility
 {
     public class OrderResponse
     {
@@ -9,6 +11,8 @@
         public decimal Price { get; set; }
 
         public decimal Quantity { get; set; }
+
+        public OrderSideStatus OrderSideStatus { get; set; }
 
     }
 }

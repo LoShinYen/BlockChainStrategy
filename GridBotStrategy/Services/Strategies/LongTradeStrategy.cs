@@ -1,25 +1,29 @@
-﻿namespace GridBotStrategy.Services.Strategies
+﻿using BlockChainStrategy.Library.Models.Dto.Utility;
+
+namespace GridBotStrategy.Services.Strategies
 {
     public class LongTradeStrategy : BaseStratgyService, ITradeStrategy
     {
 
-        public async Task ExecuteTradeAsync(TradeRobotInfo robot)
+        public async Task<OrderResponse> ExecuteTradeAsync(TradeRobotInfo robot)
         {
+            var response = new OrderResponse();
             if (CheckIsOpen(robot.CurrentPositionCount))
             {
-                await RaisePositionAsync(robot);
+                response = await RaisePositionAsync(robot);
             }
             else
             {
                 if (CheckPriceIsRaise(robot.LastPrice, robot.CurrentPrice))
                 {
-                    await RaisePositionAsync(robot);
+                    response = await RaisePositionAsync(robot);
                 }
                 else
                 {
-                    await ReducePositionAsync(robot);
+                    response = await ReducePositionAsync(robot);
                 }
             }
+            return response;
         }
     }
 }

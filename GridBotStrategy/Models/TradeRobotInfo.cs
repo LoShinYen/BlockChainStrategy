@@ -1,5 +1,4 @@
 ﻿using BlockChainStrategy.Library.Enums;
-using BlockChainStrategy.Library.Models.Dto.Utility;
 
 namespace GridBotStrategy.Models
 {
@@ -41,6 +40,11 @@ namespace GridBotStrategy.Models
         /// 持有貨幣數量
         /// </summary>
         public decimal HoldingQty { get; set; }
+
+        /// <summary>
+        /// 平均持倉價格
+        /// </summary>
+        public decimal AvgHoldingPrice { get; set; }
 
         /// <summary>
         /// 倉位資訊

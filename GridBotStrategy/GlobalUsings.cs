@@ -2,6 +2,7 @@
 global using BlockChainStrategy.Library.Enums.GridRobot;
 global using BlockChainStrategy.Library.Helpers;
 global using BlockChainStrategy.Library.Models.Context;
+global using BlockChainStrategy.Library.Models.Dto.Utility;
 global using GridBotStrategy.Enums.GridRobot;
 global using GridBotStrategy.Helpers;
 global using GridBotStrategy.Mappings;

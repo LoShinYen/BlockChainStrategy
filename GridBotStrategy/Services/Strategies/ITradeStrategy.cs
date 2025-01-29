@@ -1,7 +1,9 @@
-﻿namespace GridBotStrategy.Services.Strategies
+﻿using BlockChainStrategy.Library.Models.Dto.Utility;
+
+namespace GridBotStrategy.Services.Strategies
 {
     public interface ITradeStrategy
     {
-        Task ExecuteTradeAsync(TradeRobotInfo robot);
+        Task<OrderResponse> ExecuteTradeAsync(TradeRobotInfo robot);
     }
 }

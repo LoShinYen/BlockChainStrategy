@@ -2,7 +2,7 @@
 {
     public class NeutralTradeStrategy : BaseStratgyService, ITradeStrategy
     {
-        public Task ExecuteTradeAsync(TradeRobotInfo robot)
+        public Task<OrderResponse> ExecuteTradeAsync(TradeRobotInfo robot)
         {
             throw new NotImplementedException();
         }

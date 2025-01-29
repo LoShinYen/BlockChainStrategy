@@ -3,7 +3,7 @@
     public class ShortTradeStrategy : BaseStratgyService, ITradeStrategy
     {
 
-        public Task ExecuteTradeAsync(TradeRobotInfo robot)
+        public Task<OrderResponse> ExecuteTradeAsync(TradeRobotInfo robot)
         {
             throw new NotImplementedException();
         }
