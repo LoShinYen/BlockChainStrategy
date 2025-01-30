@@ -61,7 +61,7 @@ class Program
         var ws = host.Services.GetRequiredService<MarketDataSubscriptionHandler>();
         ws.Subscribe(trade);
 
-        //task.Add(Task.Run(async () => { await ws.ConnectAsync(); }));
+        task.Add(Task.Run(async () => { await ws.ConnectAsync(); }));
         task.Add(Task.Run(async () => { await trade.ExcuteTradeAsync(); }));
 
         await Task.WhenAll(task);

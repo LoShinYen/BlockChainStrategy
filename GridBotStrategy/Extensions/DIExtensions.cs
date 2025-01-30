@@ -1,4 +1,6 @@
-﻿using GridBotStrategy.Services;
+﻿using BlockChainStrategy.Library.Helpers.Interface;
+using GridBotStrategy.Helpers.TradeStrategyFactory;
+using GridBotStrategy.Services;
 using GridBotStrategy.Services.Handlers;
 
 namespace GridBotStrategy.Extensions
@@ -43,6 +45,8 @@ namespace GridBotStrategy.Extensions
             services.AddScoped<MarketDataSubscriptionHandler>();
             services.AddScoped<HeartbeatHandler>();
             services.AddScoped<IMarketDataService, MarketDataService>();
+            services.AddScoped<IExchangeClientFactory, ExchangeClientFactory>();
+            services.AddScoped<IStrategyFactory, StrategyFactory>();
             return services;
         }
 

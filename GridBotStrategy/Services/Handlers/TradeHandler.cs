@@ -7,6 +7,7 @@ namespace GridBotStrategy.Services.Handlers
     internal class TradeHandler : ITradeHandler
     {
         private readonly IMarketDataService _marketDataService;
+        private readonly IStrategyFactory _strategyFactory;
         private readonly CryptoPlatformDbContext _dbContext;
         private readonly IGridTradeRobotRepository _gridRobotRepository;
         private readonly IGridTradeRobotDetailRepository _gridTradeRobotDetailRepository;
@@ -15,6 +16,7 @@ namespace GridBotStrategy.Services.Handlers
 
         public TradeHandler(
             IMarketDataService marketDataService, 
+            IStrategyFactory strategyFactory,
             CryptoPlatformDbContext dbContext,
             IGridTradeRobotRepository robotRepository,
             IGridTradeRobotDetailRepository gridTradeRobotDetailRepository,
@@ -23,6 +25,7 @@ namespace GridBotStrategy.Services.Handlers
         )
         {
             _marketDataService = marketDataService;
+            _strategyFactory = strategyFactory;
             _dbContext = dbContext;
             _gridRobotRepository = robotRepository;
             _gridTradeRobotDetailRepository = gridTradeRobotDetailRepository;
@@ -32,17 +35,22 @@ namespace GridBotStrategy.Services.Handlers
 
         public async Task HandleTradeAsync(TradeRobotInfo robot)
         {
-            if (!_marketDataService.TryGetCurrentPrice(robot.Symbol, out var currentMarketPrice))
-                return;
+            if (!_marketDataService.TryGetCurrentPrice(robot.Symbol, out var currentMarketPrice)) return;
 
             robot.CurrentPrice = currentMarketPrice;
+
+            // 預防程式剛啟動時，上次價格為0
+            if (robot.LastPrice == 0 && currentMarketPrice != 0)
+            { 
+                robot.LastPrice = currentMarketPrice;
+            }
 
             var minPrice = Math.Min(robot.LastPrice, robot.CurrentPrice);
             var maxPrice = Math.Max(robot.LastPrice, robot.CurrentPrice);
 
             if (TrySelectPosition(robot, minPrice, maxPrice))
             {
-                var strategy = StrategyFactory.GetStrategy(robot.PositionSideEnum);
+                var strategy = _strategyFactory.GetStrategy(robot.PositionSideEnum);
                 var response = await strategy.ExecuteTradeAsync(robot);
                 await HandleOrderInfoProcessAsync(response, robot, strategy);
             }
@@ -52,14 +60,10 @@ namespace GridBotStrategy.Services.Handlers
 
         private bool TrySelectPosition(TradeRobotInfo robot, decimal minPrice, decimal maxPrice)
         {
-            var position = robot.Postions.FirstOrDefault(p =>
-                p.TargetPrice >= minPrice &&
-                p.TargetPrice <= maxPrice );
+            var position = robot.Postions.FirstOrDefault(p => p.TargetPrice >= minPrice && p.TargetPrice <= maxPrice );
+                
+            if (position == null) return false;
 
-            if (position == null)
-            {
-                return false;
-            }
             else
             {
                 // 符合上次下單價格，且已啟動，且為最後一個目標價格

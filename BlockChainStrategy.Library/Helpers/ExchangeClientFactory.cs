@@ -1,11 +1,12 @@
 ﻿using BlockChainStrategy.Library.Enums;
 using BlockChainStrategy.Library.Exchange;
+using BlockChainStrategy.Library.Helpers.Interface;
 
 namespace BlockChainStrategy.Library.Helpers
 {
-    public class ExchangeFactory
+    public class ExchangeClientFactory : IExchangeClientFactory
     {
-        public static IExchangeClient GetExchangeClient(ExchangeConfig config)
+        public IExchangeClient GetExchangeClient(ExchangeConfig config)
         {
             return config.ExchangeType switch
             {

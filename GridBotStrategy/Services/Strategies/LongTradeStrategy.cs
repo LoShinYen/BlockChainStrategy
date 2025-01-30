@@ -1,9 +1,13 @@
 ﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Helpers.Interface;
 
 namespace GridBotStrategy.Services.Strategies
 {
     public class LongTradeStrategy : BaseStratgyService, ITradeStrategy
     {
+        public LongTradeStrategy(IExchangeClientFactory exchangeClientFactory) : base(exchangeClientFactory)
+        {
+        }
 
         public async Task<OrderResponse> ExecuteTradeAsync(TradeRobotInfo robot)
         {

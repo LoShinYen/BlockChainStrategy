@@ -1,10 +1,19 @@
 ﻿using BlockChainStrategy.Library.Enums;
 using BlockChainStrategy.Library.Exchange.Interface;
+using BlockChainStrategy.Library.Helpers.Interface;
 
 namespace GridBotStrategy.Services
 {
     public class BaseStratgyService
     {
+        private readonly IExchangeClientFactory _exchangeClientFactory;
+
+        public BaseStratgyService(IExchangeClientFactory exchangeClientFactory)
+        {
+            _exchangeClientFactory = exchangeClientFactory;
+        }
+
+
         protected async Task<IExchangeClient> PrepareExchangeClient(TradeRobotInfo robot)
         {
             var exchangeConfig = new ExchangeConfig()
@@ -15,7 +24,7 @@ namespace GridBotStrategy.Services
                 Test = true
             };
 
-            var exchangeClient = ExchangeFactory.GetExchangeClient(exchangeConfig);
+            var exchangeClient = _exchangeClientFactory.GetExchangeClient(exchangeConfig);
             await exchangeClient.ListenWebSocketAsync();
             return exchangeClient;
         }
