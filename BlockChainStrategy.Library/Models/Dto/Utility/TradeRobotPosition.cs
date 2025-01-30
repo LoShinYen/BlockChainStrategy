@@ -8,5 +8,7 @@
 
         public bool IsActivated { get; set; }
 
+        public bool IsLastTarget { get; set; }
+
     }
 }

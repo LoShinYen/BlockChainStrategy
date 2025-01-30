@@ -65,7 +65,6 @@ namespace GridBotStrategy.Services
         /// <returns></returns>
         public async Task<OrderResponse> ReducePositionAsync(TradeRobotInfo robot)
         {
-
             var exchangeConfig = new ExchangeConfig()
             {
                 ApiKey = robot.ApiKey,
@@ -78,7 +77,8 @@ namespace GridBotStrategy.Services
             {
                 Symbol = robot.Symbol,
                 Side = OrderSideStatus.SELL,
-                UsdtQuantity = robot.ReduceQty,
+                ReduceQty = robot.ReduceQty,
+                CurrentPrice = robot.CurrentPrice,
                 Laverage = robot.Laverage,
             };
 

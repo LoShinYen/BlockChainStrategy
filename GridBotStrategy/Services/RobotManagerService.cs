@@ -1,5 +1,4 @@
-﻿using BlockChainStrategy.Library.Models.Dto.Utility;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace GridBotStrategy.Services
 {
@@ -138,6 +137,7 @@ namespace GridBotStrategy.Services
                     TargetIndex = i,
                     TargetPrice = robot.MinPrice + gridAmount * i,
                     IsActivated = false,
+                    IsLastTarget = false
                 };
                 positions.Add(position);
             }

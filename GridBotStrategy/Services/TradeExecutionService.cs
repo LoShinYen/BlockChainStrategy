@@ -82,8 +82,7 @@ namespace GridBotStrategy.Services
                     {
                         try
                         {
-                            //await _tradeHandler.HandleTradeAsync(robot);
-                            await _tradeHandler.TestCreateOrderAsync(robot);
+                            await _tradeHandler.HandleTradeAsync(robot);
                         }
                         catch (Exception ex)
                         {

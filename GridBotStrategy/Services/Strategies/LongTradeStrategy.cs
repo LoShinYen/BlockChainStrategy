@@ -16,11 +16,11 @@ namespace GridBotStrategy.Services.Strategies
             {
                 if (CheckPriceIsRaise(robot.LastPrice, robot.CurrentPrice))
                 {
-                    response = await RaisePositionAsync(robot);
+                    response = await ReducePositionAsync(robot);
                 }
                 else
                 {
-                    response = await ReducePositionAsync(robot);
+                    response = await RaisePositionAsync(robot);
                 }
             }
             return response;

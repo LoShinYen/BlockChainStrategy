@@ -58,38 +58,30 @@ namespace GridBotStrategy.Services.Handlers
         {
             var position = robot.Postions.FirstOrDefault(p =>
                 p.TargetPrice >= minPrice &&
-                p.TargetPrice <= maxPrice &&
-                p.TargetPrice != robot.LastTargetPositionPrice);
+                p.TargetPrice <= maxPrice );
 
             if (position == null)
+            {
                 return false;
+            }
+            else
+            {
+                // 符合上次下單價格，且已啟動，且為最後一個目標價格
+                if (position.TargetPrice == robot.LastTargetPositionPrice && position.IsLastTarget == true && position.IsActivated == true)
+                {
+                    return false;
+                }
+                // 符合上次下單、未被啟動、倉為尚平 
+                if (position.IsActivated == false && position.IsLastTarget == true && robot.CurrentPositionCount !=0 )
+                { 
+                    return false;
+                }
+            }
 
             robot.TargetPositionIndex = position.TargetIndex;
             robot.LastTargetPositionPrice = position.TargetPrice;
+
             return true;
-        }
-    
-        
-        public async Task TestCreateOrderAsync(TradeRobotInfo robot)
-        {
-            if (robot.Symbol == "BTCUSDT")
-            {
-                var currentMarketPrice = 101000;
-                robot.LastPrice = 100900;
-
-                robot.CurrentPrice = currentMarketPrice;
-
-                var minPrice = Math.Min(robot.LastPrice, robot.CurrentPrice);
-                var maxPrice = Math.Max(robot.LastPrice, robot.CurrentPrice);
-
-                if (CheckTargetPrice(robot, minPrice, maxPrice) && SelectTargetIndex(robot, minPrice, maxPrice))
-                {
-                    var strategy = StrategyFactory.GetStrategy(robot.PositionSideEnum);
-                    var response = await strategy.ExecuteTradeAsync(robot);
-                    await HandleOrderInfoProcessAsync(response,robot);
-                }
-                robot.LastPrice = currentMarketPrice;
-            }
         }
 
         private async Task HandleOrderInfoProcessAsync(OrderResponse order, TradeRobotInfo robot)
@@ -111,7 +103,7 @@ namespace GridBotStrategy.Services.Handlers
                     runningOrder.TradeAmount += order.Quantity;
 
                     //網格歸0，關閉訂單
-                    robot.CurrentPositionCount -= adjustmentCount;
+                    robot.CurrentPositionCount += adjustmentCount;
                     if (robot.CurrentPositionCount == 0)
                     {
                         runningOrder.Status = "Finish";
@@ -162,8 +154,16 @@ namespace GridBotStrategy.Services.Handlers
                     else
                     { 
                         var orQty = robot.HoldingQty;
-                        robot.AvgHoldingPrice = (orQty * robot.AvgHoldingPrice - order.Quantity * order.Price) / (orQty - order.Quantity);
-                        robot.Postions[robot.TargetPositionIndex].IsActivated = false;
+                        if (robot.CurrentPositionCount == 0)
+                        {
+                            robot.AvgHoldingPrice = 0;
+                            robot.Postions.ForEach(p => p.IsActivated = false);
+                        }
+                        else
+                        { 
+                            robot.AvgHoldingPrice = (orQty * robot.AvgHoldingPrice - order.Quantity * order.Price) / (orQty - order.Quantity);
+                            robot.Postions[robot.TargetPositionIndex].IsActivated = false;
+                        }
                         robot.HoldingQty -= order.Quantity;
                     }
                 }
@@ -175,6 +175,10 @@ namespace GridBotStrategy.Services.Handlers
                 {
                     throw new Exception("尚未支援中性機器人");
                 }
+
+                //Rest Robot Postions IsLastTarget
+                robot.Postions.ForEach(p => p.IsLastTarget = false);
+                robot.Postions[robot.TargetPositionIndex].IsLastTarget = true;
 
                 detailInfo.AvgPrice = robot.AvgHoldingPrice;
                 detailInfo.HoldingAmount = robot.HoldingQty;

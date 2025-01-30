@@ -1,4 +1,5 @@
-﻿using BlockChainStrategy.Library.Enums.Binance;
+﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Enums.Binance;
 using BlockChainStrategy.Library.Helpers;
 using BlockChainStrategy.Library.Models.Dto.Binance;
 using BlockChainStrategy.Library.Models.Dto.Binance.Event;
@@ -158,18 +159,19 @@ namespace BlockChainStrategy.Library.Exchange
         /// <exception cref="Exception"></exception>
         public async Task<OrderResponse> CreateOrderProcessAsync(OrderRequest request, bool waitFinalStatus = true)
         {
-            var response = new OrderResponse() { Symbol = request.Symbol , OrderSideStatus = request.Side};
+            var response = new OrderResponse() { Symbol = request.Symbol, OrderSideStatus = request.Side };
 
             await ChangePositionModeAsync(true);
 
-            var changeLeverageResult = new BinanceChangeLeverageRequestDto(){
-                Symbol = request.Symbol, 
-                Laverage = request.Laverage ,
+            var changeLeverageResult = new BinanceChangeLeverageRequestDto()
+            {
+                Symbol = request.Symbol,
+                Laverage = request.Laverage,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString()
             };
             await ChangeLeverageAsync(changeLeverageResult);
 
-            var amount = BinanceCalcuteQtyHelper.CalcuteQty(request);
+            decimal amount = CalcuteAmount(request);
 
             var binanceRequest = new BinanceCreateOrderRequestDto()
             {
@@ -217,6 +219,20 @@ namespace BlockChainStrategy.Library.Exchange
                 }
                 return response;
             }
+        }
+
+        private static decimal CalcuteAmount(OrderRequest request)
+        {
+            decimal amount;
+            if (request.Side == OrderSideStatus.BUY)
+            {
+                amount = BinanceCalculateQtyHelper.CalculateValidTradeQuantity(request);
+            }
+            else
+            {
+                amount = BinanceCalculateQtyHelper.AdjustQuantityToStepSize(request.Symbol, request.ReduceQty);
+            }
+            return amount;
         }
 
         /// <summary>

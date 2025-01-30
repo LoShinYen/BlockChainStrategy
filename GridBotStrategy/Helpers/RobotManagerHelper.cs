@@ -43,8 +43,6 @@
                 string encryptedApiKey = EncryptionHelper.Encrypt(newApiKey);
                 string encryptedApiSecret = EncryptionHelper.Encrypt(newApiSecret);
 
-                Console.WriteLine("加密成功！");
-                LoggerHelper.LogInfo($"本次更新成功,Encrypt API Key :{encryptedApiKey} , Encrypt API Secret : {encryptedApiSecret}");
                 return (encryptedApiKey, encryptedApiSecret);
             }
             catch (Exception ex)
