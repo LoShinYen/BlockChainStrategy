@@ -1,6 +1,4 @@
-﻿using BlockChainStrategy.Library.Models.Dto.Utility;
-
-namespace GridBotStrategy.Services.Strategies
+﻿namespace GridBotStrategy.Services.Strategies
 {
     public class LongTradeStrategy : BaseStratgyService, ITradeStrategy
     {

@@ -1,9 +1,26 @@
 ﻿using BlockChainStrategy.Library.Enums;
+using BlockChainStrategy.Library.Exchange.Interface;
 
 namespace GridBotStrategy.Services
 {
     public class BaseStratgyService
     {
+        protected async Task<IExchangeClient> PrepareExchangeClient(TradeRobotInfo robot)
+        {
+            var exchangeConfig = new ExchangeConfig()
+            {
+                ApiKey = robot.ApiKey,
+                ApiSecret = robot.ApiSecret,
+                ExchangeType = robot.ExchangeTypeEnum,
+                Test = true
+            };
+
+            var exchangeClient = ExchangeFactory.GetExchangeClient(exchangeConfig);
+            await exchangeClient.ListenWebSocketAsync();
+            return exchangeClient;
+        }
+
+
         /// <summary>
         /// 檢查是否有開倉
         /// </summary>
@@ -33,13 +50,7 @@ namespace GridBotStrategy.Services
         /// <returns></returns>
         public async Task<OrderResponse> RaisePositionAsync(TradeRobotInfo robot)
         {
-            var exchangeConfig = new ExchangeConfig() 
-            {
-                ApiKey = robot.ApiKey ,
-                ApiSecret = robot.ApiSecret ,
-                ExchangeType =  robot.ExchangeTypeEnum ,
-                Test = true
-            };
+            var exchangeClient = await PrepareExchangeClient(robot);
 
             var orderRequest = new OrderRequest()
             {
@@ -50,12 +61,7 @@ namespace GridBotStrategy.Services
                 Laverage = robot.Laverage,
             };
 
-            var exchangeClient = ExchangeFactory.GetExchangeClient(exchangeConfig);
-
-            await exchangeClient.ListenWebSocketAsync();
-
-            var response = await exchangeClient.CreateOrderProcessAsync(orderRequest);
-            return response;
+            return await exchangeClient.CreateOrderProcessAsync(orderRequest);
         }
 
         /// <summary>
@@ -65,13 +71,7 @@ namespace GridBotStrategy.Services
         /// <returns></returns>
         public async Task<OrderResponse> ReducePositionAsync(TradeRobotInfo robot)
         {
-            var exchangeConfig = new ExchangeConfig()
-            {
-                ApiKey = robot.ApiKey,
-                ApiSecret = robot.ApiSecret,
-                ExchangeType = robot.ExchangeTypeEnum,
-                Test = true
-            };
+            var exchangeClient = await PrepareExchangeClient(robot);
 
             var orderRequest = new OrderRequest()
             {
@@ -82,11 +82,7 @@ namespace GridBotStrategy.Services
                 Laverage = robot.Laverage,
             };
 
-            var exchangeClient = ExchangeFactory.GetExchangeClient(exchangeConfig);
-
-            await exchangeClient.ListenWebSocketAsync();
-            var response = await exchangeClient.CreateOrderProcessAsync(orderRequest);
-            return response;
+            return await exchangeClient.CreateOrderProcessAsync(orderRequest);
         }
     }
 }

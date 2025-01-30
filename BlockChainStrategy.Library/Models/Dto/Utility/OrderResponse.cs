@@ -14,5 +14,7 @@ namespace BlockChainStrategy.Library.Models.Dto.Utility
 
         public OrderSideStatus OrderSideStatus { get; set; }
 
+        public DateTime UpdateTime { get; set; } = DateTime.UtcNow;
+
     }
 }
