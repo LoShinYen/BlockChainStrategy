@@ -6,5 +6,10 @@
         {
             throw new NotImplementedException();
         }
+
+        public void UpdatePositionInfo(OrderResponse order, TradeRobotInfo robot)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

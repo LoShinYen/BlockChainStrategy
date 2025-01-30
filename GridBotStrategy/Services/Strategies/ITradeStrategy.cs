@@ -1,9 +1,9 @@
-﻿using BlockChainStrategy.Library.Models.Dto.Utility;
-
-namespace GridBotStrategy.Services.Strategies
+﻿namespace GridBotStrategy.Services.Strategies
 {
     public interface ITradeStrategy
     {
         Task<OrderResponse> ExecuteTradeAsync(TradeRobotInfo robot);
+
+        void UpdatePositionInfo(OrderResponse order, TradeRobotInfo robot);
     }
 }

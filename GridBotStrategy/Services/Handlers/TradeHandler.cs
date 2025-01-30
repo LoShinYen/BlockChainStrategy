@@ -1,5 +1,6 @@
 ﻿using BlockChainStrategy.Library.Enums;
 using GridBotStrategy.Helpers.TradeStrategyFactory;
+using GridBotStrategy.Services.Strategies;
 
 namespace GridBotStrategy.Services.Handlers
 {
@@ -43,7 +44,7 @@ namespace GridBotStrategy.Services.Handlers
             {
                 var strategy = StrategyFactory.GetStrategy(robot.PositionSideEnum);
                 var response = await strategy.ExecuteTradeAsync(robot);
-                await HandleOrderInfoProcessAsync(response, robot);
+                await HandleOrderInfoProcessAsync(response, robot, strategy);
             }
 
             robot.LastPrice = currentMarketPrice;
@@ -79,7 +80,7 @@ namespace GridBotStrategy.Services.Handlers
             return true;
         }
 
-        private async Task HandleOrderInfoProcessAsync(OrderResponse order, TradeRobotInfo robot)
+        private async Task HandleOrderInfoProcessAsync(OrderResponse order, TradeRobotInfo robot,ITradeStrategy strategy)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
@@ -94,7 +95,7 @@ namespace GridBotStrategy.Services.Handlers
                 await CreateOrderHistoyAsync(order, runningOrder.GridTradeRobotOrderId);
 
                 //Setp 3: Update Running Order Info
-                SettingRobotInfo(order, robot);
+                strategy.UpdatePositionInfo(order, robot);
 
                 //Setp 4: Update Detail Info
                 UpdateOrderDetail(robot, detailInfo);
@@ -159,50 +160,6 @@ namespace GridBotStrategy.Services.Handlers
                 CreatedAt = order.UpdateTime
             };
             await _gridTradeRobotOrderHostoryRepository.CreateRobotOrderHistoryAsync(history);
-        }
-
-        private static void SettingRobotInfo(OrderResponse order, TradeRobotInfo robot)
-        {
-            if (robot.PositionSideEnum == GridTradeRobotPositionSide.Long)
-            {
-                // IsActivated = true 代表啟動
-                if (order.OrderSideStatus == OrderSideStatus.BUY)
-                {
-                    var orQty = robot.HoldingQty;
-                    robot.AvgHoldingPrice = (orQty * robot.AvgHoldingPrice + order.Quantity * order.Price) / (orQty + order.Quantity);
-
-                    robot.Postions[robot.TargetPositionIndex].IsActivated = true;
-                    robot.HoldingQty += order.Quantity;
-                }
-                // IsActivated = false 
-                else
-                {
-                    var orQty = robot.HoldingQty;
-                    if (robot.CurrentPositionCount == 0)
-                    {
-                        robot.AvgHoldingPrice = 0;
-                        robot.Postions.ForEach(p => p.IsActivated = false);
-                    }
-                    else
-                    {
-                        robot.AvgHoldingPrice = (orQty * robot.AvgHoldingPrice - order.Quantity * order.Price) / (orQty - order.Quantity);
-                        robot.Postions[robot.TargetPositionIndex].IsActivated = false;
-                    }
-                    robot.HoldingQty -= order.Quantity;
-                }
-            }
-            else if (robot.PositionSideEnum == GridTradeRobotPositionSide.Short)
-            {
-                throw new Exception("尚未支援做空機器人");
-            }
-            else
-            {
-                throw new Exception("尚未支援中性機器人");
-            }
-
-            //Rest Robot Postions IsLastTarget
-            robot.Postions.ForEach(p => p.IsLastTarget = false);
-            robot.Postions[robot.TargetPositionIndex].IsLastTarget = true;
         }
 
         private void UpdateOrderDetail(TradeRobotInfo robot, GridTradeRobotDetail detailInfo)
