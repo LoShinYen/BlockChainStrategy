@@ -2,7 +2,7 @@
 
 namespace GridBotStrategy.Services.Strategies
 {
-    public class ShortTradeStrategy : BaseStratgyService, ITradeStrategy
+    public class ShortTradeStrategy : BaseStrategyService, ITradeStrategy
     {
         public ShortTradeStrategy(IExchangeClientFactory exchangeClientFactory) : base(exchangeClientFactory)
         {

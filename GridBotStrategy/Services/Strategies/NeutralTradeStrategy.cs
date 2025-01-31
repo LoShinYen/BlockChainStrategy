@@ -2,7 +2,7 @@
 
 namespace GridBotStrategy.Services.Strategies
 {
-    public class NeutralTradeStrategy : BaseStratgyService, ITradeStrategy
+    public class NeutralTradeStrategy : BaseStrategyService, ITradeStrategy
     {
         public NeutralTradeStrategy(IExchangeClientFactory exchangeClientFactory) : base(exchangeClientFactory)
         {

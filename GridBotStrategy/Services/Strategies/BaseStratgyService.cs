@@ -5,6 +5,7 @@ using BlockChainStrategy.Library.Helpers.Interface;
 namespace GridBotStrategy.Services
 {
     public class BaseStratgyService
+
     {
         private readonly IExchangeClientFactory _exchangeClientFactory;
 
