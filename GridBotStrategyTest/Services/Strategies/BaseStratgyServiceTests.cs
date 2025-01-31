@@ -60,7 +60,7 @@ namespace GridBotStrategyTest.Services.Strategies
             };
             for (int i = 1; i <= 2; i++)
             { 
-                robot.Postions.Add(new TradeRobotPosition { IsActivated = false });
+                robot.Postions.Add(new TradeRobotPosition {});
             }
 
             var expectedResponse = new OrderResponse { Price = 20000, Quantity = 0.0025m };

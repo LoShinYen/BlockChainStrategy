@@ -6,8 +6,6 @@
 
         public decimal TargetPrice { get; set; }
 
-        public bool IsActivated { get; set; }
-
         public bool IsLastTarget { get; set; }
 
     }

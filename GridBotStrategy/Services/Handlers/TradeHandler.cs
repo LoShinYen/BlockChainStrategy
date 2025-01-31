@@ -66,13 +66,8 @@ namespace GridBotStrategy.Services.Handlers
 
             else
             {
-                // 符合上次下單價格，且已啟動，且為最後一個目標價格
-                if (position.TargetPrice == robot.LastTargetPositionPrice && position.IsLastTarget == true && position.IsActivated == true)
-                {
-                    return false;
-                }
-                // 符合上次下單、未被啟動、倉為尚平 
-                if (position.IsActivated == false && position.IsLastTarget == true && robot.CurrentPositionCount !=0 )
+                // 符合上次下單價格，且為最後一個目標價格，且倉未平倉
+                if (position.TargetPrice == robot.LastTargetPositionPrice && position.IsLastTarget == true && robot.CurrentPositionCount != 0)
                 {
                     return false;
                 }

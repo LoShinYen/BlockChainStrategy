@@ -136,7 +136,6 @@ namespace GridBotStrategy.Services
                 {
                     TargetIndex = i,
                     TargetPrice = robot.MinPrice + gridAmount * i,
-                    IsActivated = false,
                     IsLastTarget = false
                 };
                 positions.Add(position);
