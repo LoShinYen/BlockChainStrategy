@@ -4,12 +4,11 @@ using BlockChainStrategy.Library.Helpers.Interface;
 
 namespace GridBotStrategy.Services
 {
-    public class BaseStratgyService
-
+    public class BaseStrategyService
     {
         private readonly IExchangeClientFactory _exchangeClientFactory;
 
-        public BaseStratgyService(IExchangeClientFactory exchangeClientFactory)
+        public BaseStrategyService(IExchangeClientFactory exchangeClientFactory)
         {
             _exchangeClientFactory = exchangeClientFactory;
         }

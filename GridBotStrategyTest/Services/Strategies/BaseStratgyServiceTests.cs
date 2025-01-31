@@ -13,7 +13,7 @@ namespace GridBotStrategyTest.Services.Strategies
     {
         private readonly Mock<IExchangeClientFactory> _mockFactory;
         private readonly Mock<IExchangeClient> _mockClient;
-        private readonly BaseStratgyService _service;
+        private readonly BaseStrategyService _service;
 
         public BaseStratgyServiceTests()
         {
@@ -24,7 +24,7 @@ namespace GridBotStrategyTest.Services.Strategies
                 .Setup(f => f.GetExchangeClient(It.IsAny<ExchangeConfig>()))
                 .Returns(_mockClient.Object);
 
-            _service = new BaseStratgyService(_mockFactory.Object);
+            _service = new BaseStrategyService(_mockFactory.Object);
         }
 
         [Theory]

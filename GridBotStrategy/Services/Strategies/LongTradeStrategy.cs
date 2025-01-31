@@ -3,7 +3,7 @@ using BlockChainStrategy.Library.Helpers.Interface;
 
 namespace GridBotStrategy.Services.Strategies
 {
-    public class LongTradeStrategy : BaseStratgyService, ITradeStrategy
+    public class LongTradeStrategy : BaseStrategyService, ITradeStrategy
     {
         public LongTradeStrategy(IExchangeClientFactory exchangeClientFactory) : base(exchangeClientFactory)
         {
