@@ -8,7 +8,7 @@ class Proram
     {
         try
         { 
-            LoggerHelper.LogInfo("UnifiedWsGateway is Start");
+            LoggerHelper.LogAndShowInfo("UnifiedWsGateway is Start");
             var configuration = BuildConfiguration();
             var symbols = FetchMarketPricSymbol(configuration);
             var tasks = new List<Task>();
@@ -26,11 +26,11 @@ class Proram
         }
         catch (Exception ex)
         {
-            LoggerHelper.LogError(ex.Message);
+            LoggerHelper.LogAndShowError(ex.Message);
         }
         finally
         {
-            LoggerHelper.LogInfo("UnifiedWsGateway is Stop");
+            LoggerHelper.LogAndShowInfo("UnifiedWsGateway is Stop");
         }
     }
 
@@ -57,7 +57,7 @@ class Proram
         HttpListener httpListener = new HttpListener();
         httpListener.Prefixes.Add("http://localhost:5001/subscribe/");
         httpListener.Start();
-        LoggerHelper.LogInfo("WebSocket server started on ws://localhost:5001/subscribe/");
+        LoggerHelper.LogAndShowInfo("WebSocket server started on ws://localhost:5001/subscribe/");
 
         while (true)
         {

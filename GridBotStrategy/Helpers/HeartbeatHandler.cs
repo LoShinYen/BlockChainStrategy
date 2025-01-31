@@ -33,13 +33,13 @@ namespace GridBotStrategy.Helpers
                     {
                         var heartbeatMessage = Encoding.UTF8.GetBytes("ping");
                         await clientWebSocket.SendAsync(new ArraySegment<byte>(heartbeatMessage), WebSocketMessageType.Text, true, cancellationToken);
-                        LoggerHelper.LogInfo("已發送心跳包");
+                        LoggerHelper.LogAndShowInfo("已發送心跳包");
                     }
                     await Task.Delay(HeartbeatIntervalMs, cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    LoggerHelper.LogError($"發送心跳包時出錯：{ex.Message}");
+                    LoggerHelper.LogAndShowError($"發送心跳包時出錯：{ex.Message}");
                     break;
                 }
             }

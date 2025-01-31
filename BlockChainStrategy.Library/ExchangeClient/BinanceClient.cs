@@ -94,7 +94,7 @@ namespace BlockChainStrategy.Library.Exchange
                     var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _cts.Token);
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        Console.WriteLine("Binance WS closed!");
+                        LoggerHelper.LogInfo("Binance WS closed!");
                         break;
                     }
                     var json = Encoding.UTF8.GetString(buffer, 0, result.Count);
@@ -102,7 +102,7 @@ namespace BlockChainStrategy.Library.Exchange
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Binance WS Error: {ex.Message}");
+                    LoggerHelper.LogError($"Binance WS Error: {ex.Message}");
                     break;
                 }
             }
@@ -118,7 +118,7 @@ namespace BlockChainStrategy.Library.Exchange
                 {
                     case EventStatus.TRADE_LITE:
                         var tradeLiteResult = JsonConvert.DeserializeObject<BinanceTradeLiteEvent>(json);
-                        Console.WriteLine($"[TRADE_LITE]: {JsonConvert.SerializeObject(tradeLiteResult)}");
+                        LoggerHelper.LogInfo($"[TRADE_LITE]: {JsonConvert.SerializeObject(tradeLiteResult)}");
                         var tradeClientOrderId = tradeLiteResult?.ClientOrderId;
                         if (!string.IsNullOrEmpty(tradeClientOrderId) && _orderTcsMap.TryGetValue(tradeClientOrderId, out var tradeTcs))
                         {
@@ -133,11 +133,11 @@ namespace BlockChainStrategy.Library.Exchange
 
                     case EventStatus.ACCOUNT_UPDATE:
                         var accountResult = JsonConvert.DeserializeObject<BinanceAccountUpdateEvent>(json);
-                        Console.WriteLine($"[ACCOUNT_UPDATE]: {JsonConvert.SerializeObject(accountResult)}");
+                        LoggerHelper.LogInfo($"[ACCOUNT_UPDATE]: {JsonConvert.SerializeObject(accountResult)}");
                         break;
 
                     default:
-                        Console.WriteLine($"[UNKNOWN_EVENT_TYPE]: {eventType}, JSON: {json}");
+                        LoggerHelper.LogInfo($"[UNKNOWN_EVENT_TYPE]: {eventType}, JSON: {json}");
                         break;
                 }
             }
@@ -202,7 +202,6 @@ namespace BlockChainStrategy.Library.Exchange
                 try
                 {
                     var finalStatus = await tcs!.Task;
-                    Console.WriteLine($"訂單 {binanceRequest.NewClientOrderId} 狀態: {finalStatus}");
                     var listenInfo = _oderListenInfo[binanceRequest.NewClientOrderId];
                     response.ClientOrderId = listenInfo.ClientOrderId;
                     response.Price = Decimal.TryParse(listenInfo.LimitPrice, out var price) ? price : 0;

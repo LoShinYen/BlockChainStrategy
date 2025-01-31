@@ -49,15 +49,15 @@ namespace UnifiedWsGateway.Services
                 }
                 catch (WebSocketException ex)
                 {
-                    LoggerHelper.LogError($"WebSocket 發生錯誤: {ex.Message}, 正在嘗試重新連接...");
+                    LoggerHelper.LogAndShowError($"WebSocket 發生錯誤: {ex.Message}, 正在嘗試重新連接...");
                 }
                 catch (Exception ex)
                 {
-                    LoggerHelper.LogError($"未知錯誤: {ex.Message}");
+                    LoggerHelper.LogAndShowError($"未知錯誤: {ex.Message}");
                 }
                 finally
                 {
-                    LoggerHelper.LogInfo($"WebSocket重新連線，請等待{retryDelay /1000}秒");
+                    LoggerHelper.LogAndShowInfo($"WebSocket重新連線，請等待{retryDelay /1000}秒");
                     await Task.Delay(retryDelay);
                     retryDelay = Math.Min(retryDelay * 2, 30000);
                 }
@@ -116,7 +116,7 @@ namespace UnifiedWsGateway.Services
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError($"處理行情數據時發生錯誤: {ex.Message}");
+                LoggerHelper.LogAndShowError($"處理行情數據時發生錯誤: {ex.Message}");
             }
         }
     }

@@ -21,7 +21,7 @@ namespace GridBotStrategy.Services
             }
             else
             {
-                LoggerHelper.LogError($"無法解析價格：{message.MarkPrice}");
+                LoggerHelper.LogAndShowError($"無法解析價格：{message.MarkPrice}");
             }
         }
 

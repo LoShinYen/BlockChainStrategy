@@ -86,13 +86,13 @@ namespace GridBotStrategy.Services
                         }
                         catch (Exception ex)
                         {
-                            LoggerHelper.LogError($"發生錯誤：{ex.Message}");
+                            LoggerHelper.LogAndShowError($"發生錯誤：{ex.Message}");
                         }
                         finally
                         {
                             if (!_processingRobots.TryRemove(robot, out bool finish))
                             {
-                                LoggerHelper.LogError($"移除處理中的機器人失敗：{robot}");
+                                LoggerHelper.LogAndShowError($"移除處理中的機器人失敗：{robot}");
                             }
                         }
                     }

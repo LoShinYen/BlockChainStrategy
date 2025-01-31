@@ -33,7 +33,7 @@ namespace UnifiedWsGateway.Services
             _subscribedClients.Add(webSocket);
             _clientLocks.TryAdd(webSocket, new SemaphoreSlim(1, 1));
 
-            LoggerHelper.LogInfo($"Client connected: {clientIp}:{clientPort}");
+            LoggerHelper.LogAndShowInfo($"Client connected: {clientIp}:{clientPort}");
             try
             {
                 // 保持 WebSocket 連接
@@ -92,7 +92,7 @@ namespace UnifiedWsGateway.Services
                 _subscribedClients = new ConcurrentBag<WebSocket>(_subscribedClients.Where(ws => ws != client));
                 _clientLocks.TryRemove(client, out _); // 移除該客戶端的鎖
                 _connectedClients.TryRemove(client, out _); // 從連線集合中移除
-                LoggerHelper.LogInfo($"Disconnected client removed: {_clientInfo.GetValueOrDefault(client, "Unknown")}");
+                LoggerHelper.LogAndShowInfo($"Disconnected client removed: {_clientInfo.GetValueOrDefault(client, "Unknown")}");
                 _clientInfo.TryRemove(client, out _);
             }
         }

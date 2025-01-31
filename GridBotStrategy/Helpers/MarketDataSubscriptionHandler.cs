@@ -27,7 +27,7 @@ namespace GridBotStrategy.Helpers
                 try
                 {
                     await _clientWebSocket.ConnectAsync(new Uri(_serverUri), CancellationToken.None);
-                    LoggerHelper.LogInfo("成功連接到 WebSocket 統一接口");
+                    LoggerHelper.LogAndShowInfo("成功連接到 WebSocket 統一接口");
 
                     // 啟動心跳機制
                     _heartbeatManager.Start(_clientWebSocket);
@@ -38,7 +38,7 @@ namespace GridBotStrategy.Helpers
                 catch (Exception ex)
                 {
                     await Task.Delay(ReconnectDelayMs);
-                    LoggerHelper.LogError($"WebSocket 連接失敗：{ex.Message}，等待5秒");
+                    LoggerHelper.LogAndShowError($"WebSocket 連接失敗：{ex.Message}，等待5秒");
                 }
             }
         }
@@ -59,14 +59,14 @@ namespace GridBotStrategy.Helpers
                     }
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        LoggerHelper.LogInfo("伺服器關閉了 WebSocket 連接");
+                        LoggerHelper.LogAndShowInfo("伺服器關閉了 WebSocket 連接");
                         await _clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
                         break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    LoggerHelper.LogError($"接收數據時出錯：{ex.Message}");
+                    LoggerHelper.LogAndShowError($"接收數據時出錯：{ex.Message}");
                     break;
                 }
             }

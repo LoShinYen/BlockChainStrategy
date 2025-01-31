@@ -73,7 +73,7 @@ namespace GridBotStrategy.Services.Handlers
                 }
                 // 符合上次下單、未被啟動、倉為尚平 
                 if (position.IsActivated == false && position.IsLastTarget == true && robot.CurrentPositionCount !=0 )
-                { 
+                {
                     return false;
                 }
             }
@@ -111,7 +111,7 @@ namespace GridBotStrategy.Services.Handlers
             catch (Exception e)
             {
                 await transaction.RollbackAsync();
-                LoggerHelper.LogError($"發生錯誤：{e.Message}");
+                LoggerHelper.LogAndShowError($"發生錯誤：{e.Message}");
             }
         }
 

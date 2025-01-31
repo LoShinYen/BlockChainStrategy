@@ -47,7 +47,7 @@
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError($"加密過程中發生錯誤：{ex.Message}");
+                LoggerHelper.LogAndShowError($"加密過程中發生錯誤：{ex.Message}");
                 throw new Exception($"加密過程中發生錯誤：{ex.Message}");
             }
         }

@@ -23,17 +23,17 @@ namespace GridBotStrategy.Services
                     var isExit = await HandleOperationAsync(operation);
                     if (isExit)
                     {
-                        LoggerHelper.LogInfo("開始執行交易策略！");
+                        LoggerHelper.LogAndShowInfo("開始執行交易策略！");
                         break;
                     }
                 }
                 catch (DbUpdateException dbEx)
                 {
-                    LoggerHelper.LogError($"資料庫操作失敗: {dbEx.InnerException?.Message ?? dbEx.Message}");
+                    LoggerHelper.LogAndShowError($"資料庫操作失敗: {dbEx.InnerException?.Message ?? dbEx.Message}");
                 }
                 catch (Exception e)
                 {
-                    LoggerHelper.LogError($"執行失敗，錯誤訊息：{e.Message}");
+                    LoggerHelper.LogAndShowError($"執行失敗，錯誤訊息：{e.Message}");
                 }
             }
         }
@@ -63,11 +63,11 @@ namespace GridBotStrategy.Services
                     break;
 
                 case RobotOperation.RunDirectly:
-                    LoggerHelper.LogInfo("執行直接運行...");
+                    LoggerHelper.LogAndShowInfo("執行直接運行...");
                     return true;
 
                 default:
-                    LoggerHelper.LogInfo("無效操作，請重新選擇！");
+                    LoggerHelper.LogAndShowInfo("無效操作，請重新選擇！");
                     break;
             }
 
@@ -77,7 +77,7 @@ namespace GridBotStrategy.Services
         #region Create Robot
         private async Task CreateRobotAsync()
         {
-            LoggerHelper.LogInfo("執行創建機器人資訊...");
+            LoggerHelper.LogAndShowInfo("執行創建機器人資訊...");
 
             var symbol = RobotManagerHelper.GetValidatedInput("請輸入交易貨幣(ex:BTCUSDT):");
 
@@ -108,7 +108,7 @@ namespace GridBotStrategy.Services
             };
 
             await CreateRobotInfoAsync(robot);
-            LoggerHelper.LogInfo("機器人創建成功！");
+            LoggerHelper.LogAndShowInfo("機器人創建成功！");
         }
 
         private async Task CreateRobotInfoAsync(GridTradeRobot robot)
@@ -197,7 +197,7 @@ namespace GridBotStrategy.Services
 
         private async Task UpdateRobotParamsInfoAsync()
         {
-            LoggerHelper.LogInfo("執行更新機器人參數資訊...");
+            LoggerHelper.LogAndShowInfo("執行更新機器人參數資訊...");
             var robots = await _gridRobotRepository.GetAllRobotsAsync();
 
             if (robots.Count == 0)
@@ -287,7 +287,7 @@ namespace GridBotStrategy.Services
                     break;
 
                 default:
-                    LoggerHelper.LogInfo("選擇的參數無效！");
+                    LoggerHelper.LogAndShowInfo("選擇的參數無效！");
                     break;
             }
 
@@ -301,7 +301,7 @@ namespace GridBotStrategy.Services
 
         private async Task DeleteRobotAsync()
         {
-            LoggerHelper.LogInfo("執行刪除機器人資訊...");
+            LoggerHelper.LogAndShowInfo("執行刪除機器人資訊...");
             var robots = await _gridRobotRepository.GetAllRobotsAsync();
             if (robots.Count == 0)
             {
@@ -319,7 +319,7 @@ namespace GridBotStrategy.Services
             int deleteRobotId = CkeckInptRobotIdValidated(robots, "請輸入要刪除的機器人編號：");
 
             await _gridRobotRepository.DeleteRobotAsync(deleteRobotId);
-            LoggerHelper.LogInfo($"機器人 RobotID : {deleteRobotId} 刪除成功！");
+            LoggerHelper.LogAndShowInfo($"機器人 RobotID : {deleteRobotId} 刪除成功！");
         }
 
         #endregion
@@ -328,7 +328,7 @@ namespace GridBotStrategy.Services
 
         private async Task ViewRobotInfoAsync()
         {
-            LoggerHelper.LogInfo("執行查看機器人資訊...");
+            LoggerHelper.LogAndShowInfo("執行查看機器人資訊...");
             var robots = await _gridRobotRepository.GetAllRobotsAsync();
             if (robots.Count == 0)
             {
@@ -336,7 +336,7 @@ namespace GridBotStrategy.Services
                 return;
             }
             ShowRobotInfo(robots);
-            LoggerHelper.LogInfo("查看完畢");
+            LoggerHelper.LogAndShowInfo("查看完畢");
         }
 
         #endregion
