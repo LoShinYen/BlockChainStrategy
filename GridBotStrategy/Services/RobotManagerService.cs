@@ -130,7 +130,7 @@ namespace GridBotStrategy.Services
 
             decimal gridAmount = (robot.MaxPrice - robot.MinPrice) / robot.GridCount;
 
-            for (int i = 0; i < robot.GridCount-1; i++)
+            for (int i = 0; i < robot.GridCount; i++)
             {
                 var position = new TradeRobotPosition
                 {
