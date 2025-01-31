@@ -35,9 +35,9 @@ namespace UnifiedWsGateway.Services
 
             while (true)
             {
-                using (ClientWebSocket clientWebSocket = new ClientWebSocket())
+                try
                 {
-                    try
+                    using (ClientWebSocket clientWebSocket = new ClientWebSocket())
                     {
                         await clientWebSocket.ConnectAsync(serverUri, CancellationToken.None);
 
@@ -45,41 +45,21 @@ namespace UnifiedWsGateway.Services
 
                         await HandleWebsocketMessageAsync(clientWebSocket);
                     }
-                    catch (WebSocketException ex)
-                    {
-                        LoggerHelper.LogError($"WebSocket 發生錯誤: {ex.Message}, 正在嘗試重新連接...");
-                    }
-                    catch (Exception ex)
-                    {
-                        LoggerHelper.LogError($"未知錯誤: {ex.Message}");
-                    }
-                    finally
-                    {
-                        LoggerHelper.LogInfo($"WebSocket重新連線，請等待{retryDelay /1000}秒");
-                        await Task.Delay(retryDelay);
-                        retryDelay = Math.Min(retryDelay * 2, 30000);
-                    }
-                }
-            }
-        }
 
-        private async Task HandleWebsocketMessageAsync(ClientWebSocket clientWebSocket)
-        {
-            var buffer = new byte[8192];
-            while (clientWebSocket.State == WebSocketState.Open)
-            {
-                var result = await clientWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-                if (result.MessageType == WebSocketMessageType.Text)
-                {
-                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    if (message.Contains(@"""result"":null")) continue;
-                    RaiseMarketPriceEvent(message);
                 }
-                else if (result.MessageType == WebSocketMessageType.Close)
+                catch (WebSocketException ex)
                 {
-                    Console.WriteLine($"WebSocket closed by server: {clientWebSocket.CloseStatus}, Reason: {clientWebSocket.CloseStatusDescription}");
-                    break;
+                    LoggerHelper.LogError($"WebSocket 發生錯誤: {ex.Message}, 正在嘗試重新連接...");
+                }
+                catch (Exception ex)
+                {
+                    LoggerHelper.LogError($"未知錯誤: {ex.Message}");
+                }
+                finally
+                {
+                    LoggerHelper.LogInfo($"WebSocket重新連線，請等待{retryDelay /1000}秒");
+                    await Task.Delay(retryDelay);
+                    retryDelay = Math.Min(retryDelay * 2, 30000);
                 }
             }
         }
@@ -102,6 +82,28 @@ namespace UnifiedWsGateway.Services
                 true,
                 CancellationToken.None
             );
+            Console.WriteLine("Subscribed to market price stream.");
+        }
+
+        private async Task HandleWebsocketMessageAsync(ClientWebSocket clientWebSocket)
+        {
+            var buffer = new byte[8192];
+            while (clientWebSocket.State == WebSocketState.Open)
+            {
+                var result = await clientWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                if (result.MessageType == WebSocketMessageType.Text)
+                {
+                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    if (message.Contains(@"""result"":null")) continue;
+                    RaiseMarketPriceEvent(message);
+                }
+                else if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    Console.WriteLine($"WebSocket closed by server: {clientWebSocket.CloseStatus}, Reason: {clientWebSocket.CloseStatusDescription}");
+                    break;
+                }
+            }
         }
 
         private void RaiseMarketPriceEvent(string message)
