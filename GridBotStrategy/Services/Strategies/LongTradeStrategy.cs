@@ -12,7 +12,7 @@ namespace GridBotStrategy.Services.Strategies
         public async Task<OrderResponse> ExecuteTradeAsync(TradeRobotInfo robot)
         {
             var response = new OrderResponse();
-            if (CheckIsOpen(robot.CurrentPositionCount))
+            if (CheckIsOpenAction(robot.CurrentPositionCount))
             {
                 response = await RaisePositionAsync(robot);
             }

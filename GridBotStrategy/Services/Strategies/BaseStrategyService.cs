@@ -31,14 +31,14 @@ namespace GridBotStrategy.Services
 
 
         /// <summary>
-        /// 檢查是否有開倉
+        /// 檢查是否有開倉需求
         /// </summary>
         /// <param name="currentPositionCount">目前倉位數量</param>
         /// <returns></returns>
-        public bool CheckIsOpen(int currentPositionCount)
+        public bool CheckIsOpenAction(int currentPositionCount)
         {
-            if (currentPositionCount == 0) return false;
-            return true;
+            if (currentPositionCount == 0) return true;
+            return false;
         }
 
         /// <summary>

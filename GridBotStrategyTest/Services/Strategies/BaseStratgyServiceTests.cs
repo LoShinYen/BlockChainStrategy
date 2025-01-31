@@ -28,12 +28,12 @@ namespace GridBotStrategyTest.Services.Strategies
         }
 
         [Theory]
-        [InlineData(0, false)]
-        [InlineData(1, true)]
-        [InlineData(-2, true)]
+        [InlineData(0, true)]
+        [InlineData(1, false)]
+        [InlineData(-2, false)]
         public void CheckIsOpen_ReturnsExpected(int currentPos, bool expected)
         {
-            var result = _service.CheckIsOpen(currentPos);
+            var result = _service.CheckIsOpenAction(currentPos);
             Assert.Equal(expected, result);
         }
 
