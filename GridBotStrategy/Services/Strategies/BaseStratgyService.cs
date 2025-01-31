@@ -37,7 +37,7 @@ namespace GridBotStrategy.Services
         /// <returns></returns>
         public bool CheckIsOpen(int currentPositionCount)
         {
-            if (currentPositionCount > 0) return false;
+            if (currentPositionCount == 0) return false;
             return true;
         }
 
