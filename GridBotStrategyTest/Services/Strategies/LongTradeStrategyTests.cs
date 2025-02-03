@@ -109,6 +109,110 @@ namespace GridBotStrategyTest.Services.Strategies
                 Times.Once
             );
         }
-        #endregion 
+        #endregion
+
+        #region UpdatePositionInfo Tests
+        [Fact]
+        public void UpdatePositionInfo_BuyOrder_ShouldRecalcHoldingAndAvgPrice()
+        {
+            var robot = new TradeRobotInfo
+            {
+                HoldingQty = 1m,
+                AvgHoldingPrice = 100m,
+                CurrentPositionCount = 1,
+                Postions = new List<TradeRobotPosition> 
+                {
+                    new TradeRobotPosition { IsLastTarget=false },
+                    new TradeRobotPosition { IsLastTarget=false }
+                },
+                TargetPositionIndex = 1
+            };
+            var order = new OrderResponse
+            {
+                OrderSideStatus = OrderSideStatus.BUY,
+                Quantity = 2m,
+                Price = 120m
+            };
+
+            decimal expectedAvg = (1m * 100m + 2m * 120m) / (1m + 2m); // => 113.3333
+            // Act
+            _strategy.UpdatePositionInfo(order, robot);
+
+            // Assert
+            Assert.Equal(expectedAvg, robot.AvgHoldingPrice, precision: 4);
+            Assert.Equal(3m, robot.HoldingQty);
+            // 檢查 positions
+            Assert.False(robot.Postions[0].IsLastTarget);
+            Assert.True(robot.Postions[1].IsLastTarget);
+        }
+
+        [Fact]
+        public void UpdatePositionInfo_SellOrder_CurPosCountIsZero_ShouldResetAvgPrice()
+        {
+            // Arrange
+            var robot = new TradeRobotInfo
+            {
+                HoldingQty = 5m,
+                AvgHoldingPrice = 100m,
+                CurrentPositionCount = 0,
+                Postions = new List<TradeRobotPosition> 
+                {
+                    new TradeRobotPosition { IsLastTarget=false },
+                    new TradeRobotPosition { IsLastTarget=false }
+                },
+                TargetPositionIndex = 1
+            };
+            var order = new OrderResponse
+            {
+                OrderSideStatus = OrderSideStatus.SELL,
+                Quantity = 5m,
+                Price = 120m
+            };
+
+            // Act
+            _strategy.UpdatePositionInfo(order, robot);
+
+            // Assert
+            // 若 CurrentPositionCount=0 => 直接 AvgHoldingPrice=0
+            Assert.Equal(0m, robot.AvgHoldingPrice);
+            Assert.Equal(0m, robot.HoldingQty);
+            Assert.False(robot.Postions[0].IsLastTarget);
+            Assert.True(robot.Postions[1].IsLastTarget);
+        }
+
+        [Fact]
+        public void UpdatePositionInfo_SellOrder_CurPosCountIsNotZero_ShouldRecalcAvgPrice()
+        {
+            // Arrange
+            var robot = new TradeRobotInfo
+            {
+                HoldingQty = 5m,
+                AvgHoldingPrice = 100m,
+                CurrentPositionCount = 1,
+                Postions = new List<TradeRobotPosition> 
+                { 
+                    new TradeRobotPosition { IsLastTarget = false }, new TradeRobotPosition { IsLastTarget = false } 
+                },
+                TargetPositionIndex = 1
+            };
+            var order = new OrderResponse
+            {
+                OrderSideStatus = OrderSideStatus.SELL,
+                Quantity = 2m,
+                Price = 120m
+            };
+
+            var expected = (5m * 100m - 2m * 120m) / (5m - 2m); // => 86.6667
+
+            // Act
+            _strategy.UpdatePositionInfo(order, robot);
+
+            // Assert
+            Assert.Equal(expected, robot.AvgHoldingPrice, precision: 4);
+            Assert.Equal(3m, robot.HoldingQty); // 5 - 2
+            Assert.False(robot.Postions[0].IsLastTarget);
+            Assert.True(robot.Postions[1].IsLastTarget);
+        }
+        #endregion
     }
 }
