@@ -6,7 +6,7 @@ using Moq;
 
 namespace GridBotStrategyTest.Services.Handlers
 {
-    internal class TradeHandlerTests
+    public class TradeHandlerTests
     {
         private readonly Mock<IMarketDataService> _marketDataServiceMock;
         private readonly Mock<IStrategyFactory> _mockFactory;
@@ -27,6 +27,5 @@ namespace GridBotStrategyTest.Services.Handlers
             _gridTradeRobotOrderRepository = new Mock<IGridTradeRobotOrderRepository>();
             _gridTradeRobotOrderHostoryRepository = new Mock<IGridTradeRobotOrderHostoryRepository>();
         }
-
     }
 }
