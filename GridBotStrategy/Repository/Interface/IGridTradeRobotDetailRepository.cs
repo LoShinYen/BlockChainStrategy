@@ -1,6 +1,6 @@
 ﻿namespace GridBotStrategy.Repository.Interface
 {
-    internal interface IGridTradeRobotDetailRepository
+    public interface IGridTradeRobotDetailRepository
     {
         Task<GridTradeRobotDetail?> GetDetailByRobotIdAsync(int robotId);
 

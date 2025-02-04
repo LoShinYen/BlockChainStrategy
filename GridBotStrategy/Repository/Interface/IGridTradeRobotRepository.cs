@@ -1,6 +1,6 @@
 ﻿namespace GridBotStrategy.Repository.Interface
 {
-    internal interface IGridTradeRobotRepository
+    public interface IGridTradeRobotRepository
     {
 
         Task CreateRobotAsync(GridTradeRobot robot);

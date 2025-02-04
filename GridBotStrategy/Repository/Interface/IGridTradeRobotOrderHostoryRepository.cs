@@ -1,6 +1,6 @@
 ﻿namespace GridBotStrategy.Repository.Interface
 {
-    internal interface IGridTradeRobotOrderHostoryRepository
+    public interface IGridTradeRobotOrderHostoryRepository
     {
         Task CreateRobotOrderHistoryAsync(GridTradeRobotOrderHistory orderHistory);
     }

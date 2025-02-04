@@ -2,7 +2,7 @@
 
 namespace GridBotStrategy.Services.Interface
 {
-    internal interface IMarketDataService
+    public interface IMarketDataService
     {
         void UpdateMarketPrice(BinanceMarketPriceDataDto message);
 
