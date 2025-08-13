@@ -46,7 +46,7 @@
             _context.SaveChanges();
         }
 
-        public async void UpdateRobotByOrderProccssed(TradeRobotInfo robot)
+        public async Task UpdateRobotByOrderProccssed(TradeRobotInfo robot)
         { 
             var dbRobot = await _context.GridTradeRobots.FirstOrDefaultAsync(r => r.GridTradeRobotId == robot.RobotId);
             if (dbRobot != null)

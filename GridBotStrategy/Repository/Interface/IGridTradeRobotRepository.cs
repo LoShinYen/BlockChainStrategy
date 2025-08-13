@@ -13,7 +13,7 @@
 
         void UpdateRobot(GridTradeRobot robot);
 
-        void UpdateRobotByOrderProccssed(TradeRobotInfo robot);
+        Task UpdateRobotByOrderProccssed(TradeRobotInfo robot);
 
         Task UpdateAPIKeyAsync(string encryptedApiKey, string encryptedApiSecret);
 

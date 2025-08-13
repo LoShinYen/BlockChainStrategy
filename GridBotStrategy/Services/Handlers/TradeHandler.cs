@@ -12,16 +12,14 @@ namespace GridBotStrategy.Services.Handlers
         private readonly IGridTradeRobotRepository _gridRobotRepository;
         private readonly IGridTradeRobotDetailRepository _gridTradeRobotDetailRepository;
         private readonly IGridTradeRobotOrderRepository _gridTradeRobotOrderRepository;
-        private readonly IGridTradeRobotOrderHostoryRepository _gridTradeRobotOrderHostoryRepository;
 
         public TradeHandler(
-            IMarketDataService marketDataService, 
+            IMarketDataService marketDataService,
             IStrategyFactory strategyFactory,
             CryptoPlatformDbContext dbContext,
             IGridTradeRobotRepository robotRepository,
             IGridTradeRobotDetailRepository gridTradeRobotDetailRepository,
-            IGridTradeRobotOrderRepository gridTradeRobotOrderRepository,
-            IGridTradeRobotOrderHostoryRepository gridTradeRobotOrderHostoryRepository
+            IGridTradeRobotOrderRepository gridTradeRobotOrderRepository
         )
         {
             _marketDataService = marketDataService;
@@ -30,7 +28,6 @@ namespace GridBotStrategy.Services.Handlers
             _gridRobotRepository = robotRepository;
             _gridTradeRobotDetailRepository = gridTradeRobotDetailRepository;
             _gridTradeRobotOrderRepository = gridTradeRobotOrderRepository;
-            _gridTradeRobotOrderHostoryRepository = gridTradeRobotOrderHostoryRepository;
         }
 
         public async Task HandleTradeAsync(TradeRobotInfo robot)
@@ -41,7 +38,7 @@ namespace GridBotStrategy.Services.Handlers
 
             // 預防程式剛啟動時，上次價格為0
             if (robot.LastPrice == 0 && currentMarketPrice != 0)
-            { 
+            {
                 robot.LastPrice = currentMarketPrice;
             }
 
@@ -60,8 +57,8 @@ namespace GridBotStrategy.Services.Handlers
 
         private bool TrySelectPosition(TradeRobotInfo robot, decimal minPrice, decimal maxPrice)
         {
-            var position = robot.Postions.FirstOrDefault(p => p.TargetPrice >= minPrice && p.TargetPrice <= maxPrice );
-                
+            var position = robot.Postions.FirstOrDefault(p => p.TargetPrice >= minPrice && p.TargetPrice <= maxPrice);
+
             if (position == null) return false;
 
             else
@@ -79,38 +76,36 @@ namespace GridBotStrategy.Services.Handlers
             return true;
         }
 
-        private async Task HandleOrderInfoProcessAsync(OrderResponse order, TradeRobotInfo robot,ITradeStrategy strategy)
+        private async Task HandleOrderInfoProcessAsync(OrderResponse order, TradeRobotInfo robot, ITradeStrategy strategy)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var detailInfo = await _gridTradeRobotDetailRepository.GetDetailByRobotIdAsync(robot.RobotId);
-                if (detailInfo == null) throw new Exception("找不到對應的Detail資料");
+                await UpdateOrderInfoAsync(order, robot);
 
-                //Setp 1: Update Robot Info
-                var runningOrder = await UpdateRunningOrderAsync(order, robot);
-
-                //Setp 2: Create Order History
-                await CreateOrderHistoyAsync(order, runningOrder.GridTradeRobotOrderId);
-
-                //Setp 3: Update Running Order Info
                 strategy.UpdatePositionInfo(order, robot);
 
-                //Setp 4: Update Detail Info
-                UpdateOrderDetail(robot, detailInfo);
+                await UpdateOrderDetailAsync(robot);
 
-                _gridRobotRepository.UpdateRobotByOrderProccssed(robot);
+                await _gridRobotRepository.UpdateRobotByOrderProccssed(robot);
+
                 await _dbContext.SaveChangesAsync();
+
                 await transaction.CommitAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                await transaction.RollbackAsync();
+                LoggerHelper.LogAndShowError($"發生錯誤：{e.ToString()}");
             }
             catch (Exception e)
             {
                 await transaction.RollbackAsync();
-                LoggerHelper.LogAndShowError($"發生錯誤：{e.Message}");
+                LoggerHelper.LogAndShowError($"發生錯誤：{e.ToString()}");
             }
         }
 
-        private async Task<GridTradeRobotOrder> UpdateRunningOrderAsync(OrderResponse order, TradeRobotInfo robot)
+        private async Task<GridTradeRobotOrder> UpdateOrderInfoAsync(OrderResponse order, TradeRobotInfo robot)
         {
             var runningOrder = await _gridTradeRobotOrderRepository.GetRunningOrderByRobotIdAsync(robot.RobotId);
 
@@ -119,54 +114,77 @@ namespace GridBotStrategy.Services.Handlers
             //如果有正在執行的訂單
             if (runningOrder != null)
             {
-                runningOrder.UpdatedAt = order.UpdateTime;
-                runningOrder.TradeAmount += order.Quantity;
-
-                //網格歸0，關閉訂單
-                robot.CurrentPositionCount += adjustmentCount;
-                if (robot.CurrentPositionCount == 0)
-                {
-                    runningOrder.Status = "Finish";
-                    robot.StatusEnum = GridTradeRobotStatus.Open;
-                }
-                _gridTradeRobotOrderRepository.UpdateRobotOrder(runningOrder);
+                UpdateOrderInfo(order, robot, runningOrder, adjustmentCount);
             }
             //如果沒有正在執行的訂單
             else
             {
-                runningOrder = new GridTradeRobotOrder()
-                {
-                    GridTradeRobotId = robot.RobotId,
-                    Status = "Running",
-                    TradeAmount = order.Quantity,
-                    CreatedAt = order.UpdateTime
-                };
-                await _gridTradeRobotOrderRepository.CreateRobotOrderAsync(runningOrder);
-                robot.CurrentPositionCount += adjustmentCount;
-                robot.StatusEnum = GridTradeRobotStatus.Running;
+                runningOrder = CreateOrderInfo(order, robot, adjustmentCount);
             }
+
+            MapOrderHistory(order, runningOrder);
+
+            _gridTradeRobotOrderRepository.UpdateRobotOrder(runningOrder);
+
             return runningOrder;
         }
 
-        private async Task CreateOrderHistoyAsync(OrderResponse order, int rinningOrderId)
+        private static void UpdateOrderInfo(OrderResponse order, TradeRobotInfo robot, GridTradeRobotOrder runningOrder, int adjustmentCount)
+        {
+            runningOrder.UpdatedAt = order.UpdateTime;
+
+            runningOrder.TradeAmount += order.Quantity;
+
+            //網格歸0，關閉訂單
+            robot.CurrentPositionCount += adjustmentCount;
+            if (robot.CurrentPositionCount == 0)
+            {
+                runningOrder.Status = "Finish";
+                robot.StatusEnum = GridTradeRobotStatus.Open;
+            }
+
+            runningOrder.UpdatedAt = DateTime.Now;
+        }
+
+
+        private static GridTradeRobotOrder CreateOrderInfo(OrderResponse order, TradeRobotInfo robot, int adjustmentCount)
+        {
+            GridTradeRobotOrder runningOrder = new GridTradeRobotOrder()
+            {
+                GridTradeRobotId = robot.RobotId,
+                Status = "Running",
+                TradeAmount = order.Quantity,
+                CreatedAt = order.UpdateTime,
+                UpdatedAt = DateTime.Now
+            };
+            robot.CurrentPositionCount += adjustmentCount;
+            robot.StatusEnum = GridTradeRobotStatus.Running;
+            return runningOrder;
+        }
+
+        private static void MapOrderHistory(OrderResponse order, GridTradeRobotOrder runningOrder)
         {
             var history = new GridTradeRobotOrderHistory()
             {
-                GridTradeRobotOrderId = rinningOrderId,
                 Price = order.Price,
                 TradeAction = order.OrderSideStatus.ToString(),
                 TradeAmount = order.Quantity,
                 CreatedAt = order.UpdateTime
             };
-            await _gridTradeRobotOrderHostoryRepository.CreateRobotOrderHistoryAsync(history);
+
+            runningOrder.GridTradeRobotOrderHistories.Add(history);
         }
 
-        private void UpdateOrderDetail(TradeRobotInfo robot, GridTradeRobotDetail detailInfo)
+        private async Task UpdateOrderDetailAsync(TradeRobotInfo robot)
         {
+            var detailInfo = await _gridTradeRobotDetailRepository.GetDetailByRobotIdAsync(robot.RobotId);
+            if (detailInfo == null) throw new Exception("找不到對應的Detail資料");
+
             detailInfo.AvgPrice = robot.AvgHoldingPrice;
             detailInfo.HoldingAmount = robot.HoldingQty;
             detailInfo.Postions = robot.Postions;
             detailInfo.CurrentPositionCount = robot.CurrentPositionCount;
+
             _gridTradeRobotDetailRepository.UpdateRobotDetail(detailInfo);
         }
     }
